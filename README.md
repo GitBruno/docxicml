@@ -43,22 +43,27 @@ Supported Elements
 ------------------
 The following features are currently supported:
 
+* Custom Paragraph Styles
+
+* Custom Character Styles
+
+* Bold, italics
+
 * Headings
-  Yet to be implemented
 
 * Lists
   Yet to be implemented
 
-* Tables.
+* Tables
   Yet to be implemented
   
 * Footnotes and endnotes.
   Yet to be implemented
 
-* Images.
+* Images
   Yet to be implemented
 
-* Bold, italics, underlines, strikethrough, superscript and subscript.
+* Underlines, strikethrough, superscript and subscript.
   Yet to be implemented
 
 * Links.
@@ -80,7 +85,7 @@ Installation
 
 Elephant requires [Mammoth][] and [XSLT 2.0][]. I chose the famous [Saxon][] to provide the implementation.
 
-[Mammoth]: https://pypi.python.org/pypi/mammoth
+[Mammoth]: https://github.com/mwilliamson/python-mammoth
 [XSLT 2.0]: https://www.w3.org/TR/xslt20/
 [Saxon]: https://sourceforge.net/projects/saxon/
 

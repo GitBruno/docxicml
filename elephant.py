@@ -26,6 +26,7 @@ try:
     givenFilePath = sys.argv[1]
     base_dir = prePath(givenFilePath)
     fileName = os.path.splitext( noPath(givenFilePath) )[0]
+    scriptPath = prePath(os.path.abspath(__file__))
 except IndexError:
     raise IndexError('docx_2_html.py needs filename as first argument')
 
@@ -89,7 +90,7 @@ def main():
     for m in messages:
         print m
 
-    subprocess.call(["saxon", "-o:"+os.path.join(base_dir, fileName+".icml"), "-s:"+os.path.join(base_dir, fileName+".html"), "xhtml_2_icml.xslt"])
+    subprocess.call(["saxon", "-o:"+os.path.join(base_dir, fileName+".icml"), "-s:"+os.path.join(base_dir, fileName+".html"), os.path.join(scriptPath, "xhtml_2_icml.xslt")])
 
 def addToStyles(styleInfo):
     if styleInfo[0] == 'paragraph':
