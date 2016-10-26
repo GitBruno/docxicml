@@ -6,7 +6,7 @@ Elephant .docx to ICML converter
 Elephant is designed to convert .docx documents, such as those created by Microsoft Word, and convert them to ICML. (An IDML snippet type for Adobe Indesign)
 Elephant aims to produce simple and clean snippets by using semantic information only, therefore ignoring styling as font-info, colour, etc.
 
-There's a large mismatch between the structure used by .docx and the structure of IDML, meaning that the conversion is unlikely to be perfect for more complicated documents. Elephant assumes styles are only used to semantically mark up your document.
+There's a large mismatch between the structure used by .docx and the structure of IDML, meaning that the conversion is unlikely to be perfect for more complicated documents. Elephant assumes styles are only used to semantically mark up your document. Elephant is using [Python-Mammoth](https://github.com/mwilliamson/python-mammoth) to convert the docx to html, then uses an XSLT stylesheet to transform the HTML to ICML.
 
 
 Contents

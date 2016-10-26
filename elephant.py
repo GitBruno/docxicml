@@ -39,7 +39,7 @@ def main():
     
     # Build style map from convert messages (missing style warnings)
     with open(givenFilePath, "rb") as docx_file:
-        messages = mammoth.convert_to_html(docx_file).messages
+        messages = mammoth.convert_to_html(docx_file, ignore_empty_paragraphs=False).messages
 
     for m in messages:
         if m.type == "warning":
@@ -64,8 +64,13 @@ def main():
         className = re.sub('[^A-Za-z0-9]+', '', rStyleDict[k])
         style_map += "\nr[style-name='" + rStyleDict[k] + "'] => span." + className + ":fresh"
     
+    # add some standard lines
+    # style_map += "\nu => span.underline" #Mammoth is ignoring underlines by default
+
     # Remove first new line and convert back to unicode string
-    style_map = style_map[style_map.index('\n')+1:]
+    if style_map.startswith('\n'):
+        style_map = style_map[style_map.index('\n')+1:]
+
     style_map = unicode(style_map, "utf-8")
     
     print "Generated Stylemap ----------------"
@@ -74,7 +79,7 @@ def main():
     
     # Now we can convert docx with generated style map
     with open(givenFilePath, "rb") as docx_file:
-        result = mammoth.convert_to_html(docx_file, style_map=style_map)
+        result = mammoth.convert_to_html(docx_file, style_map=style_map, ignore_empty_paragraphs=False)
         messages = result.messages # Any messages, such as warnings during conversion
         html = "<body>" + result.value + "</body>" # XML needs a root tag
         
@@ -98,6 +103,6 @@ def addToStyles(styleInfo):
     elif styleInfo[0] == 'run':
         rStyleDict[styleInfo[1]] = styleInfo[1]
     else:
-        print 'ERROR: Not a valid style type: ' + str(styleInfo)
+        print 'ELEPHANT ERROR: Not a valid style type: ' + str(styleInfo)
 
 main();
