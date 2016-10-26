@@ -47,37 +47,30 @@ The following features are currently supported:
 
 * Custom Character Styles
 
-* Bold, italics
+* Bold and italics  
+  (Underlines, strikethrough and colours are ignored)
 
 * Headings
 
-* Lists
-  Yet to be implemented
+* Lists. Yet to be implemented
 
-* Tables
-  Yet to be implemented
+* Tables. Yet to be implemented
   
-* Footnotes and endnotes.
-  Yet to be implemented
+* Footnotes and endnotes. Yet to be implemented
 
-* Images
-  Yet to be implemented
+* Images. Yet to be implemented
 
-* Underlines, strikethrough, superscript and subscript.
-  Yet to be implemented
+* Superscript and subscript. Yet to be implemented
 
-* Links.
-  Yet to be implemented
+* Links. Yet to be implemented
 
-* Line breaks.
-  Yet to be implemented
+* Line breaks. Yet to be implemented
 
 * Text boxes. The contents of the text box are treated as a separate paragraph
   that appears after the paragraph containing the text box.
   Yet to be implemented
 
-* Comments.
-  Yet to be implemented
+* Comments. Yet to be implemented
 
 
 Installation
@@ -104,6 +97,6 @@ Install Mammoth
 Getting Help
 ------------
 
-If you have any difficulties with keep-style-refs, or would like to see a new feature, please [file an Issue][] on GitHub.
+If you have any difficulties with Elephant, or would like to see a new feature, please [file an Issue][] on GitHub.
 
 [file an issue]: http://github.com/gitbruno/keep-style-refs/issues
