@@ -5,7 +5,7 @@ element is to be processed and which is used for output purpose only
 -->
 <xsl:stylesheet version="2.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"> 
-  <xsl:output indent="yes"/>
+  <xsl:output method="xml" indent="yes"/>
 <!--Conversion of 'XHTML' documents to Adobe InCopy ICML, a stand-alone XML format
 which is a subset of the zipped IDML format for which the documentation is
 available here: http://wwwimages.adobe.com/www.adobe.com/content/dam/Adobe/en/devnet/indesign/sdk/cs6/idml/idml-specification.pdf
@@ -64,7 +64,15 @@ tell processor to process the entire document with this template.
   <RootParagraphStyleGroup Self="keep-style-refs_paragraph_styles">
     <ParagraphStyle Self="$ID/NormalParagraphStyle" Name="$ID/NormalParagraphStyle" />
 
-    <xsl:for-each select="distinct-values(//h1[@class]/@class | //h2[@class]/@class | //h3[@class]/@class | //h4[@class]/@class | //h5[@class]/@class | //h6[@class]/@class | //p[@class]/@class )">
+    <xsl:for-each select="distinct-values(//h1[@class]/@class | 
+                                          //h2[@class]/@class | 
+                                          //h3[@class]/@class | 
+                                          //h4[@class]/@class | 
+                                          //h5[@class]/@class | 
+                                          //h6[@class]/@class | 
+                                          //p[@class]/@class  |
+                                          //ul[@class]/@class |
+                                          //ol[@class]/@class )">
       <xsl:call-template name="createParagraphStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="."/></xsl:with-param>
       </xsl:call-template>
@@ -106,6 +114,18 @@ tell processor to process the entire document with this template.
       </xsl:call-template>
     </xsl:if>
 
+    <xsl:if test="//ul[not(@class)]">
+      <xsl:call-template name="createParagraphStyle">
+        <xsl:with-param name="styleName">ul</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:if test="//ol[not(@class)]">
+      <xsl:call-template name="createParagraphStyle">
+        <xsl:with-param name="styleName">ol</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
   </RootParagraphStyleGroup>
 
 <!-- END PARAGRAPH STYLE DEFINITION -->
@@ -126,7 +146,7 @@ tell processor to process the entire document with this template.
 
 </xsl:template>
 
-<!-- start templates -->
+<!-- start body -->
 
 <xsl:template name="createCharacterStyle">
   <xsl:param name="styleName" />
@@ -155,7 +175,6 @@ tell processor to process the entire document with this template.
     </Properties>
   </ParagraphStyle>
 </xsl:template>
-
 
 <!-- P R O C E S S  C H A R A C T E R   S T Y L E S -->
 
@@ -200,24 +219,43 @@ tell processor to process the entire document with this template.
   </xsl:for-each>
 </xsl:template>
 
-<!-- paragarphs with class -->
-<xsl:template match="//h1[@class] | //h2[@class] | //h3[@class] | //h4[@class] | //h5[@class] | //h6[@class] | //p[@class]" >
+<xsl:template name="paragraphStyleRange">
+  <xsl:param name="styleName" />
   <ParagraphStyleRange>
-    <xsl:attribute name="AppliedParagraphStyle">ParagraphStyle/<xsl:value-of select="@class"/></xsl:attribute>    
+    <xsl:attribute name="AppliedParagraphStyle">ParagraphStyle/<xsl:value-of select="$styleName" /></xsl:attribute> 
     <xsl:call-template name="normalizeCharacterStyles" />
   </ParagraphStyleRange>
   <Br />
+</xsl:template>
+
+<!-- paragarphs with class -->
+<xsl:template match="//h1[@class] | //h2[@class] | //h3[@class] | //h4[@class] | //h5[@class] | //h6[@class] | //p[@class]" >
+  <xsl:call-template name="paragraphStyleRange" >
+    <xsl:with-param name="styleName"><xsl:value-of select="@class" /></xsl:with-param>
+  </xsl:call-template>
 </xsl:template>
 
 <!-- paragarphs without class -->
 <xsl:template match="//h1[not(@class)] | //h2[not(@class)] | //h3[not(@class)] | //h4[not(@class)] | //h5[not(@class)] | //h6[not(@class)] | //p[not(@class)]" >
-  <ParagraphStyleRange>
-    <xsl:attribute name="AppliedParagraphStyle">ParagraphStyle/<xsl:value-of select="local-name()"/></xsl:attribute>    
-    <xsl:call-template name="normalizeCharacterStyles" />
-  </ParagraphStyleRange>
-  <Br />
+  <xsl:call-template name="paragraphStyleRange">
+    <xsl:with-param name="styleName"><xsl:value-of select="local-name()" /></xsl:with-param>
+  </xsl:call-template>
 </xsl:template>
 
+<!-- list -->
+<xsl:template match="//ol/li">
+  <xsl:call-template name="paragraphStyleRange">
+    <xsl:with-param name="styleName">ol</xsl:with-param>
+  </xsl:call-template>
+</xsl:template>
+
+<xsl:template match="//ul/li">
+  <xsl:call-template name="paragraphStyleRange">
+    <xsl:with-param name="styleName">ul</xsl:with-param>
+  </xsl:call-template>
+</xsl:template>
+
+<!-- END PROCESS STYLES -->
 
 <xsl:template match="body">
   <xsl:apply-templates select="*"/>
