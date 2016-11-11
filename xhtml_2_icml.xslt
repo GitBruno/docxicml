@@ -42,6 +42,12 @@ tell processor to process the entire document with this template.
       </xsl:call-template>
     </xsl:if>
 
+    <xsl:if test="//s[not(@class)] | //strike[not(@class)] | //del[not(@class)]">
+      <xsl:call-template name="createCharacterStyle">
+        <xsl:with-param name="styleName">Strikethrough</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
     <xsl:if test="//i[not(@class)] | //em[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
         <xsl:with-param name="styleName">Italic</xsl:with-param>
@@ -49,7 +55,22 @@ tell processor to process the entire document with this template.
       </xsl:call-template>
     </xsl:if>
 
-    <xsl:for-each select="distinct-values(//span[@class]/@class)">
+    <xsl:if test="//a[not(@class)] | //link[not(@class)]">
+      <xsl:call-template name="createCharacterStyle">
+        <xsl:with-param name="styleName">Hyperlink</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:for-each select="distinct-values(//span[@class]/@class   |
+                                          //b[@class]/@class      |
+                                          //strong[@class]/@class |
+                                          //s[@class]/@class      |
+                                          //strike[@class]/@class |
+                                          //del[@class]/@class    |
+                                          //i[@class]/@class      |
+                                          //em[@class]/@class     |
+                                          //link[@class]/@class      |
+                                          //a[@class]/@class      )">
       <xsl:call-template name="createCharacterStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="." /></xsl:with-param>
       </xsl:call-template>
@@ -64,15 +85,16 @@ tell processor to process the entire document with this template.
   <RootParagraphStyleGroup Self="keep-style-refs_paragraph_styles">
     <ParagraphStyle Self="$ID/NormalParagraphStyle" Name="$ID/NormalParagraphStyle" />
 
-    <xsl:for-each select="distinct-values(//h1[@class]/@class | 
-                                          //h2[@class]/@class | 
-                                          //h3[@class]/@class | 
-                                          //h4[@class]/@class | 
-                                          //h5[@class]/@class | 
-                                          //h6[@class]/@class | 
-                                          //p[@class]/@class  |
-                                          //ul[@class]/@class |
-                                          //ol[@class]/@class )">
+    <xsl:for-each select="distinct-values(//h1[@class]/@class       | 
+                                          //h2[@class]/@class       | 
+                                          //h3[@class]/@class       | 
+                                          //h4[@class]/@class       | 
+                                          //h5[@class]/@class       | 
+                                          //h6[@class]/@class       | 
+                                          //p[@class]/@class        |
+                                          //center[@class]/@class   |
+                                          //ul[@class]/@class       |
+                                          //ol[@class]/@class       )">
       <xsl:call-template name="createParagraphStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="."/></xsl:with-param>
       </xsl:call-template>
@@ -114,6 +136,18 @@ tell processor to process the entire document with this template.
       </xsl:call-template>
     </xsl:if>
 
+    <xsl:if test="//p[not(@class)]">
+      <xsl:call-template name="createParagraphStyle">
+        <xsl:with-param name="styleName">p</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:if test="//center[not(@class)]">
+      <xsl:call-template name="createParagraphStyle">
+        <xsl:with-param name="styleName">center</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
     <xsl:if test="//ul[not(@class)]">
       <xsl:call-template name="createParagraphStyle">
         <xsl:with-param name="styleName">ul</xsl:with-param>
@@ -142,6 +176,7 @@ tell processor to process the entire document with this template.
     <xsl:apply-templates />
 
   </Story>
+
 </Document>
 
 </xsl:template>
@@ -187,16 +222,56 @@ tell processor to process the entire document with this template.
 </xsl:template>
 
 <!-- italics -->
-<xsl:template match="//em | //i">
+<xsl:template match="//em[not(@class)] | //i[not(@class)]">
   <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/Italic">
     <Content><xsl:apply-templates select="text()"/></Content>
   </CharacterStyleRange>
 </xsl:template>
 
 <!-- bold -->
-<xsl:template match="//strong | //b">
+<xsl:template match="//strong[not(@class)] | //b[not(@class)]">
   <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/Bold">
     <Content><xsl:apply-templates select="text()"/></Content>
+  </CharacterStyleRange>
+</xsl:template>
+
+<!-- strikethrough -->
+<xsl:template match="//strike[not(@class)] | //s[not(@class)] | //del[not(@class)]">
+  <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/Strikethrough">
+    <Content><xsl:apply-templates select="text()"/></Content>
+  </CharacterStyleRange>
+</xsl:template>
+
+<xsl:template match="//a[not(@class)] | //link[not(@class)]">
+  <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/Hyperlink"> 
+    <!-- to implement actual links
+    be wary of <base tag> Specifies the base URL/target for all relative URLs in a document
+    <HyperlinkTextSource Self="{@href}" Name="{@href}" Hidden="false" AppliedCharacterStyle="CharacterStyle/Hyperlink">
+      <Content><xsl:apply-templates select="text()"/></Content>
+    </HyperlinkTextSource> -->
+    <Content><xsl:apply-templates select="text()"/></Content>
+  </CharacterStyleRange>
+</xsl:template>   
+
+<!-- list items -->
+<xsl:template match="//ol/li">
+  <xsl:call-template name="paragraphStyleRange">
+    <xsl:with-param name="styleName">ol</xsl:with-param>
+  </xsl:call-template>
+</xsl:template>
+
+<xsl:template match="//ul/li">
+  <xsl:call-template name="paragraphStyleRange">
+    <xsl:with-param name="styleName">ul</xsl:with-param>
+  </xsl:call-template>
+</xsl:template> 
+
+<!-- just added these for completion so if there is any text in these elemenst they will be processed -->
+<xsl:template match="//abbr | //acronym | //address | //article | //aside | //bdi | //bdo | //big | //blockquote | 
+                     //caption | //cite | //code | //col | //colgroup | //datalist | //dd | //details | //div | //dl | //dt | 
+                     //fieldset | //frameset | //iframe | //input | //ins | //kbd | //label | //legend | //main | //mark">
+  <CharacterStyleRange>
+      <Content><xsl:apply-templates select="text()"/></Content>
   </CharacterStyleRange>
 </xsl:template>
 
@@ -229,29 +304,16 @@ tell processor to process the entire document with this template.
 </xsl:template>
 
 <!-- paragarphs with class -->
-<xsl:template match="//h1[@class] | //h2[@class] | //h3[@class] | //h4[@class] | //h5[@class] | //h6[@class] | //p[@class]" >
+<xsl:template match="//h1[@class] | //h2[@class] | //h3[@class] | //h4[@class] | //h5[@class] | //h6[@class] | //p[@class] | //center[@class] | //ul[@class] | //ol[@class]" >
   <xsl:call-template name="paragraphStyleRange" >
     <xsl:with-param name="styleName"><xsl:value-of select="@class" /></xsl:with-param>
   </xsl:call-template>
 </xsl:template>
 
 <!-- paragarphs without class -->
-<xsl:template match="//h1[not(@class)] | //h2[not(@class)] | //h3[not(@class)] | //h4[not(@class)] | //h5[not(@class)] | //h6[not(@class)] | //p[not(@class)]" >
+<xsl:template match="//h1[not(@class)] | //h2[not(@class)] | //h3[not(@class)] | //h4[not(@class)] | //h5[not(@class)] | //h6[not(@class)] | //p[not(@class)] | //center[not(@class)] | //ul[not(@class)] | //ol[not(@class)]" >
   <xsl:call-template name="paragraphStyleRange">
     <xsl:with-param name="styleName"><xsl:value-of select="local-name()" /></xsl:with-param>
-  </xsl:call-template>
-</xsl:template>
-
-<!-- list -->
-<xsl:template match="//ol/li">
-  <xsl:call-template name="paragraphStyleRange">
-    <xsl:with-param name="styleName">ol</xsl:with-param>
-  </xsl:call-template>
-</xsl:template>
-
-<xsl:template match="//ul/li">
-  <xsl:call-template name="paragraphStyleRange">
-    <xsl:with-param name="styleName">ul</xsl:with-param>
   </xsl:call-template>
 </xsl:template>
 

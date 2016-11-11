@@ -34,9 +34,9 @@ The reason for this tool is threefold:
 Usage
 -----
 
-To convert a file use the following command:
+Convert a word document to both `xhtml` and `icml` with the following command:
 
-    python elephant sourcedoc
+    python elephant.py source.docx
 
 
 Supported Elements
@@ -48,29 +48,34 @@ The following features are currently supported:
 * Custom Character Styles
 
 * Bold and italics  
-  (Underlines, strikethrough and colours are ignored)
+  (Underlines and colours are ignored)
+
+* Strikethrough
 
 * Headings
 
-* Lists. Yet to be implemented
+* Lists
 
-* Tables. Yet to be implemented
+* Tables  
+  (Yet to be implemented)
   
-* Footnotes and endnotes. Yet to be implemented
+* Footnotes and endnotes  
+  (Yet to be implemented)
 
-* Images. Yet to be implemented
+* Images  
+  (Yet to be implemented)
 
-* Superscript and subscript. Yet to be implemented
+* Superscript and subscript  
+  (Yet to be implemented)
 
-* Links. Yet to be implemented
+* Links  
+  (Yet to be implemented)
 
-* Line breaks. Yet to be implemented
+* Line breaks  
+  (Yet to be implemented)
 
-* Text boxes. The contents of the text box are treated as a separate paragraph
-  that appears after the paragraph containing the text box.
-  Yet to be implemented
-
-* Comments. Yet to be implemented
+* Comments
+  (Yet to be implemented)
 
 
 Installation
