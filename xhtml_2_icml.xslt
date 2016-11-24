@@ -61,6 +61,30 @@ tell processor to process the entire document with this template.
       </xsl:call-template>
     </xsl:if>
 
+    <xsl:if test="//small[not(@class)]">
+      <xsl:call-template name="createCharacterStyle">
+        <xsl:with-param name="styleName">small</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:if test="//sub[not(@class)]">
+      <xsl:call-template name="createCharacterStyle">
+        <xsl:with-param name="styleName">sub</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:if test="//tt[not(@class)]">
+      <xsl:call-template name="createCharacterStyle">
+        <xsl:with-param name="styleName">teletype</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:if test="//u[not(@class)]">
+      <xsl:call-template name="createCharacterStyle">
+        <xsl:with-param name="styleName">underline</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
     <xsl:for-each select="distinct-values(//span[@class]/@class   |
                                           //b[@class]/@class      |
                                           //strong[@class]/@class |
@@ -69,8 +93,13 @@ tell processor to process the entire document with this template.
                                           //del[@class]/@class    |
                                           //i[@class]/@class      |
                                           //em[@class]/@class     |
-                                          //link[@class]/@class      |
-                                          //a[@class]/@class      )">
+                                          //link[@class]/@class   |
+                                          //a[@class]/@class      |
+                                          //small[@class]/@class  |
+                                          //sub[@class]/@class    |
+                                          //time[@class]/@class   |
+                                          //tt[@class]/@class     |
+                                          //u[@class]/@class      )">
       <xsl:call-template name="createCharacterStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="." /></xsl:with-param>
       </xsl:call-template>
@@ -94,7 +123,10 @@ tell processor to process the entire document with this template.
                                           //p[@class]/@class        |
                                           //center[@class]/@class   |
                                           //ul[@class]/@class       |
-                                          //ol[@class]/@class       )">
+                                          //ol[@class]/@class       |
+                                          //pre[@class]/@class      |
+                                          //q[@class]/@class        |
+                                          //samp[@class]/@class     )">
       <xsl:call-template name="createParagraphStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="."/></xsl:with-param>
       </xsl:call-template>
@@ -160,6 +192,30 @@ tell processor to process the entire document with this template.
       </xsl:call-template>
     </xsl:if>
 
+    <xsl:if test="//pre[not(@class)]">
+      <xsl:call-template name="createParagraphStyle">
+        <xsl:with-param name="styleName">pre</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:if test="//q[not(@class)]">
+      <xsl:call-template name="createParagraphStyle">
+        <xsl:with-param name="styleName">q</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:if test="//samp[not(@class)]">
+      <xsl:call-template name="createParagraphStyle">
+        <xsl:with-param name="styleName">samp</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:if test="//time[not(@class)]">
+      <xsl:call-template name="createParagraphStyle">
+        <xsl:with-param name="styleName">time</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
   </RootParagraphStyleGroup>
 
 <!-- END PARAGRAPH STYLE DEFINITION -->
@@ -213,8 +269,22 @@ tell processor to process the entire document with this template.
 
 <!-- P R O C E S S  C H A R A C T E R   S T Y L E S -->
 
-<!-- span with class (ignore span without class) -->
-<xsl:template match="//span[@class]">
+<!-- char style classes (ignore span without class) -->
+<xsl:template match="//span[@class]   | 
+                     //b[@class]      | 
+                     //strong[@class] | 
+                     //s[@class]      | 
+                     //strike[@class] | 
+                     //del[@class]    | 
+                     //i[@class]      | 
+                     //em[@class]     | 
+                     //link[@class]   | 
+                     //a[@class]      | 
+                     //small[@class]  |
+                     //sub[@class]    |
+                     //time[@class]   |
+                     //tt[@class]     |
+                     //u[@class]     ">
   <CharacterStyleRange>
     <xsl:attribute name="AppliedCharacterStyle">CharacterStyle/<xsl:value-of select="@class"/></xsl:attribute>
     <Content><xsl:apply-templates select="text()"/></Content>
@@ -242,6 +312,35 @@ tell processor to process the entire document with this template.
   </CharacterStyleRange>
 </xsl:template>
 
+<!-- superscripted text -->
+<xsl:template match="//sub[not(@class)]">
+  <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/sub">
+    <Content><xsl:apply-templates select="text()"/></Content>
+  </CharacterStyleRange>
+</xsl:template>
+
+<!-- time -->
+<xsl:template match="//time[not(@class)]">
+  <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/time">
+    <Content><xsl:apply-templates select="text()"/></Content>
+  </CharacterStyleRange>
+</xsl:template>
+
+<!-- teletype -->
+<xsl:template match="//tt[not(@class)]">
+  <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/teletype">
+    <Content><xsl:apply-templates select="text()"/></Content>
+  </CharacterStyleRange>
+</xsl:template>
+
+<!-- underline -->
+<xsl:template match="//u[not(@class)]">
+  <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/underline">
+    <Content><xsl:apply-templates select="text()"/></Content>
+  </CharacterStyleRange>
+</xsl:template>
+
+
 <xsl:template match="//a[not(@class)] | //link[not(@class)]">
   <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/Hyperlink"> 
     <!-- to implement actual links
@@ -267,14 +366,13 @@ tell processor to process the entire document with this template.
 </xsl:template> 
 
 <!-- just added these for completion so if there is any text in these elemenst they will be processed -->
-<xsl:template match="//abbr | //acronym | //address | //article | //aside | //bdi | //bdo | //big | //blockquote | 
-                     //caption | //cite | //code | //col | //colgroup | //datalist | //dd | //details | //div | //dl | //dt | 
-                     //fieldset | //frameset | //iframe | //input | //ins | //kbd | //label | //legend | //main | //mark">
+<xsl:template match="//abbr | //acronym | //address | //article | //aside | //bdi | //bdo | //big | //blockquote | //caption | 
+                    //cite | //code | //col | //colgroup | //datalist | //dd | //details | //div | //dl | //dt | //fieldset | 
+                    //frameset | //iframe | //input | //ins | //kbd | //label | //legend | //main | //mark | //section | //var">
   <CharacterStyleRange>
       <Content><xsl:apply-templates select="text()"/></Content>
   </CharacterStyleRange>
 </xsl:template>
-
 
 <!-- P R O C E S S   P A R A G R A P H   S T Y L E S -->
 
@@ -304,20 +402,22 @@ tell processor to process the entire document with this template.
 </xsl:template>
 
 <!-- paragarphs with class -->
-<xsl:template match="//h1[@class] | //h2[@class] | //h3[@class] | //h4[@class] | //h5[@class] | //h6[@class] | //p[@class] | //center[@class] | //ul[@class] | //ol[@class]" >
+<xsl:template match="//h1[@class] | //h2[@class] | //h3[@class] | //h4[@class] | //h5[@class] | //h6[@class] | //p[@class] | //center[@class] | //ul[@class] | //ol[@class] | //pre[@class] | //q[@class] | //samp[@class]" >
   <xsl:call-template name="paragraphStyleRange" >
     <xsl:with-param name="styleName"><xsl:value-of select="@class" /></xsl:with-param>
   </xsl:call-template>
 </xsl:template>
 
 <!-- paragarphs without class -->
-<xsl:template match="//h1[not(@class)] | //h2[not(@class)] | //h3[not(@class)] | //h4[not(@class)] | //h5[not(@class)] | //h6[not(@class)] | //p[not(@class)] | //center[not(@class)] | //ul[not(@class)] | //ol[not(@class)]" >
+<xsl:template match="//h1[not(@class)] | //h2[not(@class)] | //h3[not(@class)] | //h4[not(@class)] | //h5[not(@class)] | //h6[not(@class)] | //p[not(@class)] | //center[not(@class)] | //ul[not(@class)] | //ol[not(@class)] | //pre[not(@class)] | //q[not(@class)] | //samp[not(@class)]" >
   <xsl:call-template name="paragraphStyleRange">
     <xsl:with-param name="styleName"><xsl:value-of select="local-name()" /></xsl:with-param>
   </xsl:call-template>
 </xsl:template>
 
 <!-- END PROCESS STYLES -->
+
+<!-- TO DO: deal with tables, table/tbody/tr/td/tfoot/th/thead -->
 
 <xsl:template match="body">
   <xsl:apply-templates select="*"/>
