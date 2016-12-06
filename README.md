@@ -82,7 +82,7 @@ The following features are currently supported:
 Installation
 ------------
 
-docx-cavate requires [XSLT 2.0][] or above. I chose the famous [Saxon][] to provide the implementation, but you can roll your own.
+docx-cavate requires [XSLT 2.0][] or above. I chose [Saxon][] to provide the implementation, but you can roll your own.
 
 [XSLT 2.0]: https://www.w3.org/TR/xslt20/
 [Saxon]: http://www.saxonica.com/
@@ -100,8 +100,9 @@ Install docx-cavate:
 
 Limitations
 -----------
-As it stands this tool is a prototype and there is lots of room for improvements. First and formost we need to finalise implementation of all the [elements listed above](#supported-elements). 
-In the future it would be good if we could round-trip the files. So we can save a textile back to DOCX, so we can keep all files updated when there is a change. (And there is always a change!)
+As it stands, this tool is still a prototype and there is lots of room for improvements. First and foremost we need to finalise implementation of all the [elements listed above](#supported-elements). 
+
+In the future it would be good if we could round-trip the files. Eg save a Textile file back to DOCX, this way we can keep all files updated when there is a change. (And there is always a change!)
 
 
 Getting Help
