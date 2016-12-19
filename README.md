@@ -1,9 +1,8 @@
 
-
-docx-cavate DOCX to ICML converter 
+docxcavate DOCX to ICML converter 
 ==================================
 
-docx-cavate is designed to convert .docx documents, such as those created by Microsoft Word, and convert them to Textile and ICML. It's main intend is to help getting content ready for both digital and print publishing. It aims to produce simple and clean snippets by using semantic information only, therefore ignoring things like font-info and colours. Unlike Pandoc, docx-cavate believes and assumes that styles are applied semantically, and therefore keeps any style references bewteen formats.
+docxcavate is designed to convert .docx documents, such as those created by Microsoft Word, and convert them to Textile and ICML. It's main intend is to help getting content ready for both digital and print publishing. It aims to produce simple and clean snippets by using semantic information only, therefore ignoring things like font-info and colours. Unlike Pandoc, docxcavate believes and assumes that styles are applied semantically, and therefore keeps any style references bewteen formats.
 
 This package is standing on the shoulders of [Python-Mammoth](https://github.com/mwilliamson/python-mammoth) to convert the docx to html, and [html2textile](https://bitbucket.org/ergo/html2textile) to convert HTML to Textile. Then it uses an XSLT stylesheet to transform the HTML to ICML.
 
@@ -23,7 +22,7 @@ Contents
 Rationale
 ---------
 
-Word (The elephant in the room) is still the most used text editing tool in use. docx-cavate makes it easy to port DOCX documents via HTML to Textile and ICML.
+Word (The elephant in the room) is still the most used text editing tool in use. docxcavate makes it easy to port DOCX documents via HTML to Textile and ICML.
 
 The reason for this tool is threefold:
 
@@ -37,7 +36,7 @@ Usage
 
 Convert a word document to `xhtml` `textile` and `icml` with the following command:
 
-    docx-cavate source.docx
+    docxcavate source.docx
 
 
 Supported Elements
@@ -82,7 +81,7 @@ The following features are currently supported:
 Installation
 ------------
 
-docx-cavate requires [XSLT 2.0][] or above. I chose [Saxon][] to provide the implementation, but you can roll your own.
+docxcavate requires [XSLT 2.0][] or above. I chose [Saxon][] to provide the implementation, but you can roll your own.
 
 [XSLT 2.0]: https://www.w3.org/TR/xslt20/
 [Saxon]: http://www.saxonica.com/
@@ -93,7 +92,7 @@ Install Saxon (XSLT 2.0):
 
     brew install saxon
 
-Install docx-cavate:
+Install docxcavate:
 
     make install
 
@@ -108,6 +107,6 @@ In the future it would be good if we could round-trip the files. Eg save a Texti
 Getting Help
 ------------
 
-If you have any difficulties with docx-cavate, or would like to see a new feature, please [file an Issue][] on GitHub.
+If you have any difficulties with docxcavate, or would like to see a new feature, please [file an Issue][] on GitHub.
 
-[file an issue]: http://github.com/gitbruno/docx-cavate/issues
+[file an issue]: http://github.com/gitbruno/docxcavate/issues

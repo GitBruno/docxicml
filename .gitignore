@@ -1,6 +1,2 @@
-
-Examples/small_test.html
-
-Examples/small_test.icml
-
 _virtualenv/
+*.pyc
