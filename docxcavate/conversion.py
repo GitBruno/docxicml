@@ -7,7 +7,7 @@ and of course my own XSLT stylesheet
 
 """
 
-import os, io, ntpath, subprocess
+import os, io, re, ntpath, subprocess
 
 import mammoth
 from html2textile import *
@@ -41,13 +41,22 @@ def docx_to_html(filePath, style_map):
         messages = result.messages # Any messages, such as warnings during conversion
         html = "<body>" + result.value + "</body>" # XML needs a root tag
         
-        prettyhtml = etree.tostring(_parse_from_unicode(html), pretty_print=True)
+        prettyhtml = etree.tostring(_parse_from_unicode(html) ) #pretty_print=True indesign parses spaces
         
+        # remove empy white space at end of paragraphs
+        prettyhtml = re.sub("\s+(?=\<\/p\>)", "", prettyhtml)
+        # remove double spaces
+        prettyhtml = re.sub(" +", " ", prettyhtml)
+        # revert to original class names
+        prettyhtml = prettyhtml.replace(' class="x-', ' class="')
+
         htmlPathStr = os.path.join(pathInfo["baseDir"], pathInfo["fileName"] + ".html")
         
         saveFile = open( htmlPathStr, "w+")
         saveFile.write( prettyhtml )
         saveFile.close()
+
+
 
     # Display any messages, such as warnings during conversion
     for m in messages:
@@ -62,7 +71,7 @@ def html_to_textile(filePath):
     html = etree.parse(filePath)
     prettyhtml = etree.tostring(html, pretty_print = True)
     textile = html2textile( prettyhtml );
-    texPathStr = os.path.join(pathInfo["baseDir"], pathInfo["fileName"] + ".tex")
+    texPathStr = os.path.join(pathInfo["baseDir"], pathInfo["fileName"] + ".textile")
     saveFile = io.open( texPathStr, "w+", encoding='utf8')
     saveFile.write( textile )
     saveFile.close()

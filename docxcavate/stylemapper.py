@@ -50,13 +50,24 @@ def create_stylemap(docx_fullPath):
     # Generate the style map that mammoth can use
     # Any custom styles go to a span element with class name -> style name
     for k in pStyleDict:
-        className = re.sub('[^A-Za-z0-9]+', '', pStyleDict[k])
-        style_map += "\np[style-name='" + pStyleDict[k] + "'] => p." + className + ":fresh"
+        # replace spaces in the name with period
+        className = re.sub(' ', '.', pStyleDict[k])
+        # remove any other special chars
+        className = re.sub('[^A-Za-z0-9\-\.]+', '', className)
+        style_map += "\np[style-name='" + pStyleDict[k] + "'] => p.x-" + className + ":fresh"
 
     for k in rStyleDict:
-        className = re.sub('[^A-Za-z0-9]+', '', rStyleDict[k])
-        style_map += "\nr[style-name='" + rStyleDict[k] + "'] => span." + className
+        # replace spaces in the name with period
+        className = re.sub(' ', '.', rStyleDict[k])
+        # remove any other special chars
+        className = re.sub('[^A-Za-z0-9\-\.]+', '', className)
+        style_map += "\nr[style-name='" + rStyleDict[k] + "'] => span.x-" + className
     
+    style_map += "\nbr[type='line'] => br.line"
+    style_map += "\nbr[type='column'] => br.column"
+    style_map += "\nbr[type='page'] => br.page"
+    
+
     # add some standard lines
     # style_map += "\nu => span.underline" #Mammoth is ignoring underlines by default
 

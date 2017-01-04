@@ -71,8 +71,8 @@ The following features are currently supported:
 * Links  
   (Yet to be implemented)
 
-* Line breaks  
-  (Yet to be implemented)
+* Breaks  
+  (Line, Column, Page)
 
 * Comments
   (Yet to be implemented)
