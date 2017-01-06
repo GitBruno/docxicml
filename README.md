@@ -2,11 +2,11 @@
 docxcavate DOCX to ICML converter 
 ==================================
 
-docxcavate is designed to convert .docx documents, such as those created by Microsoft Word, and convert them to ICML. It's main intend is to help getting content ready for both digital and print publishing. It aims to produce simple and clean snippets by using semantic information only, therefore ignoring things like font-info and colours. Unlike Pandoc, docxcavate believes and assumes that styles are applied semantically, and therefore tries to keep style references.
+docxcavate is designed to convert .docx documents, such as those created by Microsoft Word, and convert them to ICML. It's main intend is to help getting content ready for both hybrid publishing. It aims to produce simple and clean snippets by using semantic information only, therefore ignoring things like font-info and colours. Unlike Pandoc, docxcavate believes (and assumes that) styles are applied semantically, and therefore tries to keep style references.
 
-This package is standing on the shoulders of [Python-Mammoth](https://github.com/mwilliamson/python-mammoth) to convert the docx to html. Then it uses an XSLT stylesheet to transform the HTML to ICML.
+This package is standing on the shoulders of others. It is using [Python-Mammoth](https://github.com/mwilliamson/python-mammoth) to convert the docx to html, and then an XSLT stylesheet to transform the HTML to ICML.
 
-There's a large mismatch between the structure of DOCX and the structure of IDML, this means that the conversion is unlikely to be perfect for more complicated documents.
+There's a large mismatch between the structure of DOCX and the structure of IDML, this means that the conversion is unlikely to be perfect. However for 
 
 Contents
 --------
@@ -27,8 +27,8 @@ Word is still the most used text editing tool in use. docxcavate makes it easy t
 The reason for this tool is threefold:
 
  1. Prepare content for hybrid publishing
- 2. Keep a clean output independent source file (Textile)
- 3. Remove all style over-rides except when semantical (eg unstyled italics)
+ 2. Keep page breaks when moving from DOCX to InDesign
+ 3. Remove all non-semantical style over-rides (eg keep unstyled italics, bolds etc)
 
 
 Usage
@@ -101,7 +101,7 @@ Limitations
 -----------
 As it stands, there is lots of room for improvements. First and foremost we need to finalise implementation of all the [elements listed above](#supported-elements). 
 
-In the future it would be good if we could round-trip the files. Eg Convert IDML back to DOCX, this way we can keep all files updated when there is a change. (And there is always a change!)
+In the future it would be good if we could round-trip the files. Eg Convert IDML back to DOCX, this way we can keep all files updated when there is a change.
 
 
 Getting Help
