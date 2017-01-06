@@ -2,11 +2,11 @@
 docxcavate DOCX to ICML converter 
 ==================================
 
-docxcavate is designed to convert .docx documents, such as those created by Microsoft Word, and convert them to Textile and ICML. It's main intend is to help getting content ready for both digital and print publishing. It aims to produce simple and clean snippets by using semantic information only, therefore ignoring things like font-info and colours. Unlike Pandoc, docxcavate believes and assumes that styles are applied semantically, and therefore keeps any style references bewteen formats.
+docxcavate is designed to convert .docx documents, such as those created by Microsoft Word, and convert them to ICML. It's main intend is to help getting content ready for both digital and print publishing. It aims to produce simple and clean snippets by using semantic information only, therefore ignoring things like font-info and colours. Unlike Pandoc, docxcavate believes and assumes that styles are applied semantically, and therefore tries to keep style references.
 
-This package is standing on the shoulders of [Python-Mammoth](https://github.com/mwilliamson/python-mammoth) to convert the docx to html, and [html2textile](https://bitbucket.org/ergo/html2textile) to convert HTML to Textile. Then it uses an XSLT stylesheet to transform the HTML to ICML.
+This package is standing on the shoulders of [Python-Mammoth](https://github.com/mwilliamson/python-mammoth) to convert the docx to html. Then it uses an XSLT stylesheet to transform the HTML to ICML.
 
-There's a large mismatch between the structure used by .docx and the structure of Texttile and IDML, this means that the conversion is unlikely to be perfect for more complicated documents.
+There's a large mismatch between the structure of DOCX and the structure of IDML, this means that the conversion is unlikely to be perfect for more complicated documents.
 
 Contents
 --------
@@ -22,7 +22,7 @@ Contents
 Rationale
 ---------
 
-Word (The elephant in the room) is still the most used text editing tool in use. docxcavate makes it easy to port DOCX documents via HTML to Textile and ICML.
+Word is still the most used text editing tool in use. docxcavate makes it easy to port DOCX documents to InDesign (ICML).
 
 The reason for this tool is threefold:
 
@@ -34,7 +34,7 @@ The reason for this tool is threefold:
 Usage
 -----
 
-Convert a word document to `xhtml` `textile` and `icml` with the following command:
+Convert a word document to `xhtml` and `icml` with the following command:
 
     docxcavate source.docx
 
@@ -99,14 +99,14 @@ Install docxcavate:
 
 Limitations
 -----------
-As it stands, this tool is still a prototype and there is lots of room for improvements. First and foremost we need to finalise implementation of all the [elements listed above](#supported-elements). 
+As it stands, there is lots of room for improvements. First and foremost we need to finalise implementation of all the [elements listed above](#supported-elements). 
 
-In the future it would be good if we could round-trip the files. Eg save a Textile file back to DOCX, this way we can keep all files updated when there is a change. (And there is always a change!)
+In the future it would be good if we could round-trip the files. Eg Convert IDML back to DOCX, this way we can keep all files updated when there is a change. (And there is always a change!)
 
 
 Getting Help
 ------------
 
-If you have any difficulties with docxcavate, or would like to see a new feature, please [file an Issue][] on GitHub.
+Found a bug? Please [file an Issue][] on GitHub.
 
 [file an issue]: http://github.com/gitbruno/docxcavate/issues

@@ -3,7 +3,8 @@
 """
 
 A tool to automatically create a stylemap for the Python-Mammoth converter
-https://github.com/mwilliamson/python-mammoth
+To make sure this tool works get python-mammoth from here:
+https://github.com/gitbruno/python-mammoth
 
 """
 

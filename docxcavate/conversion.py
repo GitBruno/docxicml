@@ -89,6 +89,6 @@ def convert(docxPath):
     styleMap = stylemapper.create_stylemap(docxPath);
     # XHTML is the heart of all conversion
     htmlPath = docx_to_html(docxPath, styleMap);
-    html_to_textile(htmlPath);
+    # html_to_textile(htmlPath);
     html_to_icml(htmlPath);
     
