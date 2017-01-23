@@ -43,12 +43,22 @@ def docx_to_html(filePath, style_map):
         
         prettyhtml = etree.tostring(_parse_from_unicode(html) ) #pretty_print=True indesign parses spaces
         
+        # START TEXT CLEAN
+        # ----------------
         # remove empy white space at end of paragraphs
         prettyhtml = re.sub("\s+(?=\<\/p\>)", "", prettyhtml)
+        # replace empty paragraphs (with or without class) with line breaks <br />
+        prettyhtml = re.sub("\<p(\s((class)|(id))=[\'\"][A-z0-9\s]+[\'\"]\s*)*\>\s*\<\/p\>", "<br />", prettyhtml)
+        # multiple to single line break
+        prettyhtml = re.sub("(\s*\<br\s*\/?\>){2,}", "<br />", prettyhtml, flags=re.IGNORECASE)
+        
         # remove double spaces
         prettyhtml = re.sub(" +", " ", prettyhtml)
         # revert to original class names
         prettyhtml = prettyhtml.replace(' class="x-', ' class="')
+        
+        # END TEXT CLEAN
+        # ----------------
 
         htmlPathStr = os.path.join(pathInfo["baseDir"], pathInfo["fileName"] + ".html")
         
