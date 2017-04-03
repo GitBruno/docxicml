@@ -38,6 +38,10 @@ Convert a word document to `xhtml` and `icml` with the following command:
 
     docxcavate source.docx
 
+## Run in Virtual Environment
+    make env
+    . _virtualenv/bin/activate
+    python docxcavate source.docx
 
 Supported Elements
 ------------------
