@@ -2,11 +2,9 @@
 docxcavate DOCX to ICML converter 
 ==================================
 
-docxcavate is designed to convert .docx documents, such as those created by Microsoft Word, and convert them to ICML. It's main intend is to help getting content ready for both hybrid publishing. It aims to produce simple and clean snippets by using semantic information only, therefore ignoring things like font-info and colours. Unlike Pandoc, docxcavate believes (and assumes that) styles are applied semantically, and therefore tries to keep style references.
+docxcavate is designed to convert .docx documents, such as those created by Microsoft Word, and convert them to ICML. It's main intend is to help getting content ready for hybrid publishing. It aims to produce simple and clean snippets by using semantic information only, therefore ignoring things like font-info and colours. Unlike Pandoc, docxcavate believes (and assumes that) styles are applied semantically, and therefore keeps style references.
 
-This package is standing on the shoulders of others. It is using [Python-Mammoth](https://github.com/mwilliamson/python-mammoth) to convert the docx to html, and then an XSLT stylesheet to transform the HTML to ICML.
-
-There's a large mismatch between the structure of DOCX and the structure of IDML, this means that the conversion is unlikely to be perfect. However for 
+This package is standing on the shoulders of [Python-Mammoth](https://github.com/mwilliamson/python-mammoth) it creates dynamic style maps and adds an XSLT stylesheet to transform the HTML from Python Mammoth to ICML.
 
 Contents
 --------
@@ -38,9 +36,10 @@ Convert a word document to `xhtml` and `icml` with the following command:
 
     docxcavate source.docx
 
+Both HTML and ICML will be saved on the same location as source.doc
+
 ## Run in Virtual Environment
     make env
-    . _virtualenv/bin/activate
     python docxcavate source.docx
 
 Supported Elements
