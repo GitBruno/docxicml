@@ -67,7 +67,6 @@ def docx_to_html(filePath, style_map):
         saveFile.close()
 
 
-
     # Display any messages, such as warnings during conversion
     for m in messages:
         print m
@@ -94,11 +93,12 @@ def html_to_icml(filePath):
     print output or "INFO: docxcavate finished conversion from HTML to ICML"
     return icmlPathStr
 
-def convert(docxPath):
+def convert(docxPath, custom_xsltPath):
     # Generate stylemap
     styleMap = stylemapper.create_stylemap(docxPath);
     # XHTML is the heart of all conversion
     htmlPath = docx_to_html(docxPath, styleMap);
     # html_to_textile(htmlPath);
-    html_to_icml(htmlPath);
+    icmlPath = html_to_icml(htmlPath);
+    return ["Done"]
     

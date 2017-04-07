@@ -10,4 +10,4 @@ if __name__ == "__main__":
     except IndexError:
         raise IndexError('docxcavate filename as first argument')
     
-    conversion.convert(filePath);
+    conversion.convert(filePath, None);

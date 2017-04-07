@@ -1,4 +1,4 @@
-.PHONY: env install
+.PHONY: env install 
 
 env:
 	@mkdir -p _virtualenv
@@ -9,10 +9,17 @@ env:
 README: README.md
 	pandoc --from=markdown --to=rst README.md > README || cp README.md README
 
-assert-converted-readme:
-	test "`cat README`" != "`cat README.md`"
+dist: README
+	python setup.py sdist
 
-setup: README
+clean:
+	rm -f README
+	rm -rf dist
+	rm -rf build
+	rm -rf docxcavate.egg-info
+	rm -rf _virtualenv
 
-install:
+install: clean dist
+	tar -xvzf dist/*.tar.gz -C dist --strip 1
+	python dist/setup.py install --force
 	env

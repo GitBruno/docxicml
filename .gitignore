@@ -1,2 +1,6 @@
-_virtualenv/
 *.pyc
+/README
+/_virtualenv
+/*.egg-info
+/dist
+/build
