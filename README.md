@@ -4,7 +4,7 @@ DOCX to ICML converter
 
 docxicml is designed to convert .docx documents to ICML. It's main intend is to help getting content ready for hybrid publishing. It aims to produce simple and clean snippets by using semantic information only, therefore ignoring things like font-info and colours. Unlike Pandoc, docxicml believes (and assumes that) styles are applied semantically, and therefore keeps style references.
 
-This package is standing on the shoulders of [Python-Mammoth](https://github.com/mwilliamson/python-mammoth) it creates dynamic style maps and adds an XSLT stylesheet to transform the HTML from Python Mammoth to ICML.
+This package is standing on the shoulders of [Python-Mammoth](https://github.com/mwilliamson/python-mammoth) it creates dynamic style maps and adds an XSLT stylesheet to transform the HTML to ICML.
 
 Contents
 --------
