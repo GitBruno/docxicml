@@ -1,8 +1,8 @@
 
-docxcavate DOCX to ICML converter 
-==================================
+DOCX to ICML converter 
+======================
 
-docxcavate is designed to convert .docx documents, such as those created by Microsoft Word, and convert them to ICML. It's main intend is to help getting content ready for hybrid publishing. It aims to produce simple and clean snippets by using semantic information only, therefore ignoring things like font-info and colours. Unlike Pandoc, docxcavate believes (and assumes that) styles are applied semantically, and therefore keeps style references.
+docxicml is designed to convert .docx documents to ICML. It's main intend is to help getting content ready for hybrid publishing. It aims to produce simple and clean snippets by using semantic information only, therefore ignoring things like font-info and colours. Unlike Pandoc, docxicml believes (and assumes that) styles are applied semantically, and therefore keeps style references.
 
 This package is standing on the shoulders of [Python-Mammoth](https://github.com/mwilliamson/python-mammoth) it creates dynamic style maps and adds an XSLT stylesheet to transform the HTML from Python Mammoth to ICML.
 
@@ -20,7 +20,7 @@ Contents
 Rationale
 ---------
 
-Word is still the most used text editing tool in use. docxcavate makes it easy to port DOCX documents to InDesign (ICML).
+Word is still the most used text editing tool in use. docxicml makes it easy to port DOCX documents to InDesign (ICML).
 
 The reason for this tool is threefold:
 
@@ -34,21 +34,18 @@ Usage
 
 Convert a word document to `xhtml` and `icml` with the following command:
 
-    docxcavate source.docx
+    docxicml source.docx
 
 Both HTML and ICML will be saved on the same location as source.doc
 
-## Run in Virtual Environment
-    make env
-    python docxcavate source.docx
 
 Supported Elements
 ------------------
 The following features are currently supported:
 
-* Custom Paragraph Styles
+* Paragraph Styles
 
-* Custom Character Styles
+* Character Styles
 
 * Bold and italics  
   (Underlines and colours are ignored)
@@ -77,14 +74,11 @@ The following features are currently supported:
 * Breaks  
   (Line, Column, Page)
 
-* Comments
-  (Yet to be implemented)
-
 
 Installation
 ------------
 
-docxcavate requires [XSLT 2.0][] or above. I chose [Saxon][] to provide the implementation, but you can roll your own.
+docxicml requires [XSLT 2.0][] or above. I chose [Saxon][] to provide the implementation, but you can roll your own.
 
 [XSLT 2.0]: https://www.w3.org/TR/xslt20/
 [Saxon]: http://www.saxonica.com/
@@ -95,7 +89,7 @@ Install Saxon (XSLT 2.0):
 
     brew install saxon
 
-Install docxcavate:
+Install docxicml:
 
     make install
 
@@ -112,4 +106,4 @@ Getting Help
 
 Found a bug? Please [file an Issue][] on GitHub.
 
-[file an issue]: http://github.com/gitbruno/docxcavate/issues
+[file an issue]: http://github.com/gitbruno/docxicml/issues

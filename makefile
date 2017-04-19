@@ -16,7 +16,7 @@ clean:
 	rm -f README
 	rm -rf dist
 	rm -rf build
-	rm -rf docxcavate.egg-info
+	rm -rf docxicml.egg-info
 	rm -rf _virtualenv
 
 install: clean dist

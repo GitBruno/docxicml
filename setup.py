@@ -8,21 +8,21 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-    name='docxcavate',
+    name='docxicml',
     version='0.1',
     description='Convert Word documents from docx to ICML',
     long_description=read("README"),
     author='Bruno Herfst',
     author_email='mail@brunoherfst.com',
-    url='https://github.com/GitBruno/docxcavate',
-    packages=['docxcavate'],
+    url='https://github.com/GitBruno/docxicml',
+    packages=['docxicml'],
     package_data={
         # Include all XSLT stylesheets
         '': ['*.xslt']
     },
     entry_points={
         "console_scripts": [
-            "docxcavate=docxcavate.cli:main"
+            "docxicml=docxicml.cli:main"
         ]
     },
     install_requires=['mammoth','html2textile','lxml','argparse'],
@@ -43,6 +43,6 @@ setup(
 		# Specify the Python versions you support here. In particular, ensure
 		# that you indicate whether you support Python 2, Python 3 or both.
 		'Programming Language :: Python :: 2',
-		'Programming Language :: Python :: 3',
+		# 'Programming Language :: Python :: 3',
 	],
 )
