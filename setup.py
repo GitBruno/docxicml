@@ -17,9 +17,10 @@ setup(
     url='https://github.com/GitBruno/docxicml',
     packages=['docxicml'],
     package_data={
-        # Include all XSLT stylesheets
-        '': ['*.xslt']
+    	 # Include all stylesheets and Java archives
+        '': ['*.xslt','*.jar'],
     },
+
     entry_points={
         "console_scripts": [
             "docxicml=docxicml.cli:main"
