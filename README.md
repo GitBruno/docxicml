@@ -52,7 +52,7 @@ The following elements are supported:
 
 Dependencies
 ------------
-docxicml requires [Java 6](https://www.java.com/en/download/) or later.
+docxicml requires [Java 6](https://www.java.com/en/download/) or later. (It uses [SaxonHE](https://sourceforge.net/projects/saxon/files/Saxon-HE/) for [XSLT 2.0](https://www.w3.org/TR/xslt20/) transformations.)
 
 
 Installation
@@ -71,6 +71,7 @@ In the future it would be good if we could round-trip; Convert IDML back to DOCX
 Getting Help
 ------------
 
-Found a bug? Please [file an Issue][] on GitHub.
+Found a bug? Please [file an Issue](http://github.com/gitbruno/docxicml/issues) on GitHub.
 
-[file an issue]: http://github.com/gitbruno/docxicml/issues
+[![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
+
