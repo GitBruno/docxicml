@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- saxon -o:output.xml -s:source.html thisStyleSheet.xslt -->
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output method="xml" version="1.0" indent="yes" encoding="UTF-8" />
     <xsl:preserve-space elements="body"/>

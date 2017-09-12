@@ -28,7 +28,7 @@ tell processor to process the entire document with this template.
 <xsl:processing-instruction name="aid">style="50" type="snippet" readerVersion="6.0" featureSet="513" product="8.0(370)"</xsl:processing-instruction>
 <xsl:processing-instruction name="aid">SnippetType="InCopyInterchange"</xsl:processing-instruction>
 
-<Document DOMVersion="8.0" Self="keep-style-refs">
+<Document DOMVersion="8.0" Self="docxcavate">
 
 <!-- START PARAGRAPH STYLE DEFINITION -->
 
@@ -48,7 +48,8 @@ tell processor to process the entire document with this template.
                                           //ol[@class]/@class       |
                                           //pre[@class]/@class      |
                                           //q[@class]/@class        |
-                                          //samp[@class]/@class     )">
+                                          //samp[@class]/@class     |
+                                          //table[@class]/@class    )">
       <xsl:call-template name="createParagraphStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="."/></xsl:with-param>
       </xsl:call-template>
@@ -137,6 +138,12 @@ tell processor to process the entire document with this template.
         <xsl:with-param name="styleName">time</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
+
+    <xsl:if test="//table[not(@class)]">
+      <xsl:call-template name="createParagraphStyle">
+        <xsl:with-param name="styleName">table</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
   </RootParagraphStyleGroup>
 
 <!-- END PARAGRAPH STYLE DEFINITION -->
@@ -221,17 +228,16 @@ tell processor to process the entire document with this template.
 
 <!-- END CHARACTER STYLE DEFINITION -->
 
-  <RootTableStyleGroup Self="keep-style-refs_table_styles">
+  <RootTableStyleGroup Self="docxcavate_table_styles">
     <TableStyle Self="TableStyle/Table" Name="Table" />
   </RootTableStyleGroup>
-  <RootCellStyleGroup Self="keep-style-refs_cell_styles">
+  <RootCellStyleGroup Self="docxcavate_cell_styles">
     <CellStyle Self="CellStyle/Cell" AppliedParagraphStyle="ParagraphStyle/$ID/[No paragraph style]" Name="Cell" />
   </RootCellStyleGroup>
-  <Story Self="keep-style-refs_story" TrackChanges="false" StoryTitle="" AppliedTOCStyle="n" AppliedNamedGrid="n" >
+
+  <Story Self="docxcavate_story" TrackChanges="false" StoryTitle="" AppliedTOCStyle="n" AppliedNamedGrid="n" >
     <StoryPreference OpticalMarginAlignment="true" OpticalMarginSize="12" />
-
     <xsl:apply-templates />
-
   </Story>
 
 </Document>
@@ -281,14 +287,14 @@ tell processor to process the entire document with this template.
 </xsl:template>
 
 <!-- paragraphs with class -->
-<xsl:template match="//h1[@class] | //h2[@class] | //h3[@class] | //h4[@class] | //h5[@class] | //h6[@class] | //p[@class] | //center[@class] | //ul[@class] | //ol[@class] | //pre[@class] | //q[@class] | //samp[@class]" >
+<xsl:template match="//h1[@class] | //h2[@class] | //h3[@class] | //h4[@class] | //h5[@class] | //h6[@class] | //p[@class] | //center[@class] | //ul[@class] | //ol[@class] | //pre[@class] | //q[@class] | //samp[@class] | //table[@class]" >
   <xsl:call-template name="paragraphStyleRange" >
     <xsl:with-param name="styleName"><xsl:value-of select="@class" /></xsl:with-param>
   </xsl:call-template>
 </xsl:template>
 
 <!-- paragarphs without class -->
-<xsl:template match="//h1[not(@class)] | //h2[not(@class)] | //h3[not(@class)] | //h4[not(@class)] | //h5[not(@class)] | //h6[not(@class)] | //p[not(@class)] | //center[not(@class)] | //ul[not(@class)] | //ol[not(@class)] | //pre[not(@class)] | //q[not(@class)] | //samp[not(@class)]" >
+<xsl:template match="//h1[not(@class)] | //h2[not(@class)] | //h3[not(@class)] | //h4[not(@class)] | //h5[not(@class)] | //h6[not(@class)] | //p[not(@class)] | //center[not(@class)] | //ul[not(@class)] | //ol[not(@class)] | //pre[not(@class)] | //q[not(@class)] | //table[not(@class)]" >
   <xsl:call-template name="paragraphStyleRange">
     <xsl:with-param name="styleName"><xsl:value-of select="local-name()" /></xsl:with-param>
   </xsl:call-template>
@@ -325,18 +331,6 @@ tell processor to process the entire document with this template.
       <BasedOn type="object">$ID/[No character style]</BasedOn>
     </Properties>
   </CharacterStyle>
-</xsl:template>
-
-<!-- Page and Column Breaks -->
-<xsl:template match="//br[@class='column']">
-  <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]" ParagraphBreakType="NextColumn">
-    <Br />
-  </CharacterStyleRange>
-</xsl:template>
-<xsl:template match="//br[@class='page']">
-  <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]" ParagraphBreakType="NextPage">
-    <Br />
-  </CharacterStyleRange>
 </xsl:template>
 
 <!-- Style class (ignore span without class) -->
@@ -410,6 +404,18 @@ tell processor to process the entire document with this template.
   </CharacterStyleRange>
 </xsl:template>
 
+<!-- Page and Column Breaks -->
+<xsl:template match="//br[@class='column']">
+  <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]" ParagraphBreakType="NextColumn">
+    <Br />
+  </CharacterStyleRange>
+</xsl:template>
+<xsl:template match="//br[@class='page']">
+  <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]" ParagraphBreakType="NextPage">
+    <Br />
+  </CharacterStyleRange>
+</xsl:template>
+
 <!-- links -->
 <xsl:template match="//a[not(@class)] | //link[not(@class)]">
   <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/Hyperlink"> 
@@ -422,6 +428,101 @@ tell processor to process the entire document with this template.
   </CharacterStyleRange>
 </xsl:template>
 
+<!-- TO DO: deal with tables, table/tbody/tr/td/tfoot/th/thead -->
+
+<!--
+<xsl:template match="//tr">
+  <Row>
+    <xsl:if test="position() &gt; 2">
+      <Br/>
+    </xsl:if>
+    <xsl:apply-templates />
+  </Row>
+</xsl:template>
+
+<xsl:template match="//td">
+  <Column>
+    <xsl:if test="position() &gt; 2">
+      <Br/>
+    </xsl:if>
+    <xsl:apply-templates />
+  </Column>
+</xsl:template>
+-->
+
+<xsl:template name="define_table_columns">
+  <xsl:param name="index">0</xsl:param>
+  <xsl:param name="columnCount">1</xsl:param>
+  <xsl:if test="not($index &gt; $columnCount)">
+    <Column Name="{$index}" />
+    <xsl:call-template name="define_table_columns">
+      <xsl:with-param name="index">
+        <xsl:value-of select="$index + 1" />
+      </xsl:with-param>
+      <xsl:with-param name="columnCount">
+        <xsl:value-of select="$columnCount" />
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:if>
+</xsl:template>
+
+<xsl:template match="//table">
+  <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/table">
+    <CharacterStyleRange>
+      <Table HeaderRowCount="0" FooterRowCount="0" AppliedTableStyle="TableStyle/Table" TableDirection="LeftToRightDirection">
+        <xsl:variable name="columnCount" select="max(child::tr/count(td))"/>
+        <xsl:attribute name="BodyRowCount">
+          <xsl:value-of select="count(child::tr)"/> 
+        </xsl:attribute>
+        <xsl:attribute name="ColumnCount">
+          <xsl:value-of select="$columnCount"/>
+        </xsl:attribute>
+        <!-- define rows -->
+        <xsl:for-each select="child::tr">
+          <xsl:variable name="rowNumber" select="position() - 1"/>
+          <Row Name="{$rowNumber}" />
+        </xsl:for-each>
+        <!-- define columns -->
+        <xsl:call-template name="define_table_columns">
+          <xsl:with-param name="index">
+            <xsl:value-of select="0" />
+          </xsl:with-param>
+          <xsl:with-param name="columnCount">
+            <xsl:value-of select="$columnCount - 1" />
+          </xsl:with-param>
+        </xsl:call-template>
+        <!-- Now we can define cells, ICML is wierd! -->
+        <xsl:for-each select="child::tr">
+          <xsl:variable name="rowNumber" select="position() - 1" />
+          <xsl:for-each select="child::td">
+            <xsl:variable name="colNumber" select="position() - 1" />
+            
+            <xsl:variable name="colSpan">
+              <xsl:choose>
+                <xsl:when test="@colspan"><xsl:value-of select="@colspan" /></xsl:when>
+                <xsl:otherwise>1</xsl:otherwise>
+              </xsl:choose>
+            </xsl:variable>
+
+            <xsl:variable name="rowSpan">
+              <xsl:choose>
+                <xsl:when test="@rowspan"><xsl:value-of select="@rowspan" /></xsl:when>
+                <xsl:otherwise>1</xsl:otherwise>
+              </xsl:choose>
+            </xsl:variable>
+
+            <Cell Name="{$colNumber}:{$rowNumber}" RowSpan="{$rowSpan}" ColumnSpan="{$colSpan}" AppliedCellStyle="CellStyle/$ID/[None]" AppliedCellStylePriority="0">
+              <xsl:apply-templates />
+            </Cell>
+
+          </xsl:for-each>
+        </xsl:for-each>
+      </Table>
+      <Br />
+    </CharacterStyleRange>
+  </ParagraphStyleRange>
+</xsl:template>
+
 <!-- just added these for completion so if there is any text in these elemenst they will be processed -->
 <xsl:template match="//abbr | //acronym | //address | //article | //aside | //bdi | //bdo | //big | //blockquote | //caption | 
                     //cite | //code | //col | //colgroup | //datalist | //dd | //details | //div | //dl | //dt | //fieldset | 
@@ -430,8 +531,6 @@ tell processor to process the entire document with this template.
       <Content><xsl:apply-templates select="text()"/></Content>
   </CharacterStyleRange>
 </xsl:template>
-
-<!-- TO DO: deal with tables, table/tbody/tr/td/tfoot/th/thead -->
 
 <xsl:template match="body">
   <xsl:apply-templates select="*"/>
