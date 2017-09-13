@@ -3,17 +3,17 @@
 Namespace tells the xlst processor about which
 element is to be processed and which is used for output purpose only
 -->
-<xsl:stylesheet version="2.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"> 
-  <xsl:output method="xml" indent="yes"/>
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:s="http://styles.data"> 
+<xsl:output method="xml" indent="yes"/>
+<xsl:key name="styleLookup" match="s:styles" use="s:tag"/>
 <!--Conversion of 'XHTML' documents to Adobe InCopy ICML, a stand-alone XML format
 which is a subset of the zipped IDML format for which the documentation is
 available here: http://wwwimages.adobe.com/www.adobe.com/content/dam/Adobe/en/devnet/indesign/sdk/cs6/idml/idml-specification.pdf
 InCopy is the companion word-processor to Adobe InDesign and ICML documents can be integrated
 into InDesign with File -> Place.-->
 <!--<?xml version="1.0" encoding="UTF-8" standalone="yes"?>-->
-  <xsl:output method="xml" version="1.0" encoding="UTF-8" standalone="yes"/>
-  <xsl:preserve-space elements="body"/>
+<xsl:output method="xml" version="1.0" encoding="UTF-8" standalone="yes"/>
+<xsl:preserve-space elements="body"/>
 <!-- xsl template declaration: 
 template tells the xlst processor about the section of xml 
 document which is to be formatted. It takes an XPath expression.
@@ -28,8 +28,9 @@ tell processor to process the entire document with this template.
 <xsl:processing-instruction name="aid">style="50" type="snippet" readerVersion="6.0" featureSet="513" product="8.0(370)"</xsl:processing-instruction>
 <xsl:processing-instruction name="aid">SnippetType="InCopyInterchange"</xsl:processing-instruction>
 
-<Document DOMVersion="8.0" Self="docxcavate">
+<xsl:variable name="stylename-lookup" select="document('')/*/s:styles"/>
 
+<Document DOMVersion="8.0" Self="docxcavate">
 <!-- START PARAGRAPH STYLE DEFINITION -->
 
   <RootParagraphStyleGroup Self="docxcavate_paragraph_styles">
@@ -157,27 +158,27 @@ tell processor to process the entire document with this template.
 
     <xsl:if test="//b[not(@class)] | //strong[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
-        <xsl:with-param name="styleName">Bold</xsl:with-param>
+        <xsl:with-param name="styleName">b</xsl:with-param>
         <xsl:with-param name="fontStyle">Bold</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
     <xsl:if test="//s[not(@class)] | //strike[not(@class)] | //del[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
-        <xsl:with-param name="styleName">Strikethrough</xsl:with-param>
+        <xsl:with-param name="styleName">s</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
     <xsl:if test="//i[not(@class)] | //em[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
-        <xsl:with-param name="styleName">Italic</xsl:with-param>
+        <xsl:with-param name="styleName">i</xsl:with-param>
         <xsl:with-param name="fontStyle">Italic</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
     <xsl:if test="//a[not(@class)] | //link[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
-        <xsl:with-param name="styleName">Hyperlink</xsl:with-param>
+        <xsl:with-param name="styleName">a</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
@@ -193,15 +194,21 @@ tell processor to process the entire document with this template.
       </xsl:call-template>
     </xsl:if>
 
+    <xsl:if test="//sup[not(@class)]">
+      <xsl:call-template name="createCharacterStyle">
+        <xsl:with-param name="styleName">sup</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
     <xsl:if test="//tt[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
-        <xsl:with-param name="styleName">teletype</xsl:with-param>
+        <xsl:with-param name="styleName">tt</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
     <xsl:if test="//u[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
-        <xsl:with-param name="styleName">underline</xsl:with-param>
+        <xsl:with-param name="styleName">u</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
@@ -294,7 +301,7 @@ tell processor to process the entire document with this template.
 </xsl:template>
 
 <!-- paragarphs without class -->
-<xsl:template match="//h1[not(@class)] | //h2[not(@class)] | //h3[not(@class)] | //h4[not(@class)] | //h5[not(@class)] | //h6[not(@class)] | //p[not(@class)] | //center[not(@class)] | //ul[not(@class)] | //ol[not(@class)] | //pre[not(@class)] | //q[not(@class)] | //table[not(@class)]" >
+<xsl:template match="//h1[not(@class)] | //h2[not(@class)] | //h3[not(@class)] | //h4[not(@class)] | //h5[not(@class)] | //h6[not(@class)] | //p[not(@class)] | //center[not(@class)] | //ul[not(@class)] | //ol[not(@class)] | //pre[not(@class)] | //q[not(@class)]" >
   <xsl:call-template name="paragraphStyleRange">
     <xsl:with-param name="styleName"><xsl:value-of select="local-name()" /></xsl:with-param>
   </xsl:call-template>
@@ -428,27 +435,7 @@ tell processor to process the entire document with this template.
   </CharacterStyleRange>
 </xsl:template>
 
-<!-- TO DO: deal with tables, table/tbody/tr/td/tfoot/th/thead -->
-
-<!--
-<xsl:template match="//tr">
-  <Row>
-    <xsl:if test="position() &gt; 2">
-      <Br/>
-    </xsl:if>
-    <xsl:apply-templates />
-  </Row>
-</xsl:template>
-
-<xsl:template match="//td">
-  <Column>
-    <xsl:if test="position() &gt; 2">
-      <Br/>
-    </xsl:if>
-    <xsl:apply-templates />
-  </Column>
-</xsl:template>
--->
+<!-- tables, todo: table/tbody/tr/td/tfoot/th/thead -->
 
 <xsl:template name="define_table_columns">
   <xsl:param name="index">0</xsl:param>
@@ -467,66 +454,108 @@ tell processor to process the entire document with this template.
 </xsl:template>
 
 <xsl:template match="//table">
+
+  <xsl:variable name="headerRowCount">
+    <xsl:choose>
+      <xsl:when test="child::thead">
+        <xsl:value-of select="count(child::thead/tr)"/>
+      </xsl:when>
+      <xsl:when test="child::tr[th]">
+        <xsl:value-of select="count(child::tr[th])"/>
+      </xsl:when>
+      <xsl:otherwise>0</xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+  
+  <xsl:variable name="bodyRowCount">
+    <xsl:choose>
+      <xsl:when test="child::tbody">
+        <xsl:value-of select="count(child::tbody/tr)"/>
+      </xsl:when>
+      <xsl:when test="child::tr">
+        <xsl:value-of select="count(child::tr)"/> 
+      </xsl:when>
+      <xsl:otherwise>0</xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+
+  <xsl:variable name="footerRowCount">
+    <xsl:choose>
+      <xsl:when test="child::tfoot">
+        <xsl:value-of select="count(child::tfoot/tr)"/>
+      </xsl:when><xsl:otherwise>0</xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+
+  <xsl:variable name="columnCount">
+    <xsl:choose>
+      <xsl:when test="child::tbody">
+        <xsl:value-of select="max(child::tbody/tr/count(td))"/>
+      </xsl:when>
+      <xsl:when test="child::tr">
+        <xsl:value-of select="max(child::tr/count(td))"/>
+      </xsl:when>
+      <xsl:otherwise>0</xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+
+  <!-- Test
+  <xsl:variable name="rowCount" select="$headerRowCount + $bodyRowCount + $footerRowCount"/>
+  -->
+
   <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/table">
-    <CharacterStyleRange>
-      <Table HeaderRowCount="0" FooterRowCount="0" AppliedTableStyle="TableStyle/Table" TableDirection="LeftToRightDirection">
-        <xsl:variable name="columnCount" select="max(child::tr/count(td))"/>
-        <xsl:attribute name="BodyRowCount">
-          <xsl:value-of select="count(child::tr)"/> 
-        </xsl:attribute>
-        <xsl:attribute name="ColumnCount">
-          <xsl:value-of select="$columnCount"/>
-        </xsl:attribute>
-        <!-- define rows -->
-        <xsl:for-each select="child::tr">
-          <xsl:variable name="rowNumber" select="position() - 1"/>
-          <Row Name="{$rowNumber}" />
+  <CharacterStyleRange>
+    <Table HeaderRowCount="{$headerRowCount}" BodyRowCount="{$bodyRowCount}" FooterRowCount="{$footerRowCount}" ColumnCount="{$columnCount}" AppliedTableStyle="TableStyle/Table" TableDirection="LeftToRightDirection">
+      <!-- define rows -->
+      <xsl:for-each select="child::thead/tr | child::tbody/tr | child::tr | child::tfooter/tr">
+        <xsl:variable name="rowNumber" select="position() - 1"/>
+        <Row Name="{$rowNumber}" />
+      </xsl:for-each>
+      <!-- define columns -->
+      <xsl:call-template name="define_table_columns">
+        <xsl:with-param name="index">
+          <xsl:value-of select="0" />
+        </xsl:with-param>
+        <xsl:with-param name="columnCount">
+          <xsl:value-of select="$columnCount - 1" />
+        </xsl:with-param>
+      </xsl:call-template>
+      <!-- Now we can define cells, ICML is wierd! -->
+      <xsl:for-each select="child::thead/tr | child::tbody/tr | child::tr | child::tfooter/tr">
+        <xsl:variable name="rowNumber" select="position() - 1" />
+        <xsl:for-each select="child::td | child::th">
+          <xsl:variable name="colNumber" select="position() - 1" />
+          
+          <xsl:variable name="colSpan">
+            <xsl:choose>
+              <xsl:when test="@colspan"><xsl:value-of select="@colspan" /></xsl:when>
+              <xsl:otherwise>1</xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+
+          <xsl:variable name="rowSpan">
+            <xsl:choose>
+              <xsl:when test="@rowspan"><xsl:value-of select="@rowspan" /></xsl:when>
+              <xsl:otherwise>1</xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+
+          <Cell Name="{$colNumber}:{$rowNumber}" RowSpan="{$rowSpan}" ColumnSpan="{$colSpan}" AppliedCellStyle="CellStyle/$ID/[None]" AppliedCellStylePriority="0">
+            <xsl:apply-templates />
+          </Cell>
+
         </xsl:for-each>
-        <!-- define columns -->
-        <xsl:call-template name="define_table_columns">
-          <xsl:with-param name="index">
-            <xsl:value-of select="0" />
-          </xsl:with-param>
-          <xsl:with-param name="columnCount">
-            <xsl:value-of select="$columnCount - 1" />
-          </xsl:with-param>
-        </xsl:call-template>
-        <!-- Now we can define cells, ICML is wierd! -->
-        <xsl:for-each select="child::tr">
-          <xsl:variable name="rowNumber" select="position() - 1" />
-          <xsl:for-each select="child::td">
-            <xsl:variable name="colNumber" select="position() - 1" />
-            
-            <xsl:variable name="colSpan">
-              <xsl:choose>
-                <xsl:when test="@colspan"><xsl:value-of select="@colspan" /></xsl:when>
-                <xsl:otherwise>1</xsl:otherwise>
-              </xsl:choose>
-            </xsl:variable>
-
-            <xsl:variable name="rowSpan">
-              <xsl:choose>
-                <xsl:when test="@rowspan"><xsl:value-of select="@rowspan" /></xsl:when>
-                <xsl:otherwise>1</xsl:otherwise>
-              </xsl:choose>
-            </xsl:variable>
-
-            <Cell Name="{$colNumber}:{$rowNumber}" RowSpan="{$rowSpan}" ColumnSpan="{$colSpan}" AppliedCellStyle="CellStyle/$ID/[None]" AppliedCellStylePriority="0">
-              <xsl:apply-templates />
-            </Cell>
-
-          </xsl:for-each>
-        </xsl:for-each>
-      </Table>
-      <Br />
-    </CharacterStyleRange>
+      </xsl:for-each>
+    </Table>
+    <Br />
+  </CharacterStyleRange>
   </ParagraphStyleRange>
 </xsl:template>
 
 <!-- just added these for completion so if there is any text in these elemenst they will be processed -->
 <xsl:template match="//abbr | //acronym | //address | //article | //aside | //bdi | //bdo | //big | //blockquote | //caption | 
-                    //cite | //code | //col | //colgroup | //datalist | //dd | //details | //div | //dl | //dt | //fieldset | 
-                    //frameset | //iframe | //input | //ins | //kbd | //label | //legend | //main | //mark | //section | //var">
+                     //cite | //code | //col | //colgroup | //datalist | //dd | //details | //div | //dl | //dt | //fieldset | 
+                     //frameset | //iframe | //input | //ins | //kbd | //label | //legend | //main | //mark | //section | //var">
   <CharacterStyleRange>
       <Content><xsl:apply-templates select="text()"/></Content>
   </CharacterStyleRange>
@@ -535,5 +564,40 @@ tell processor to process the entire document with this template.
 <xsl:template match="body">
   <xsl:apply-templates select="*"/>
 </xsl:template>
+
+<s:styles>
+  <!-- Paragraph Styles -->
+  <s:style><s:tag>h1</s:tag><s:name>Header 1</s:name></s:style>
+  <s:style><s:tag>h2</s:tag><s:name>Header 2</s:name></s:style>
+  <s:style><s:tag>h3</s:tag><s:name>Header 3</s:name></s:style>
+  <s:style><s:tag>h4</s:tag><s:name>Header 4</s:name></s:style>
+  <s:style><s:tag>h5</s:tag><s:name>Header 5</s:name></s:style>
+  <s:style><s:tag>h6</s:tag><s:name>Header 6</s:name></s:style>
+  <s:style><s:tag>p</s:tag><s:name>Header 6</s:name></s:style>
+  <s:style><s:tag>center</s:tag><s:name>Center</s:name></s:style>
+  <s:style><s:tag>ul</s:tag><s:name>Unordered List</s:name></s:style>
+  <s:style><s:tag>ol</s:tag><s:name>Ordered List</s:name></s:style>
+  <s:style><s:tag>pre</s:tag><s:name>Pre Formatted</s:name></s:style>
+  <s:style><s:tag>q</s:tag><s:name>Quotation</s:name></s:style>
+  <s:style><s:tag>samp</s:tag><s:name>Sample Output</s:name></s:style>
+  <s:style><s:tag>table</s:tag><s:name>Table</s:name></s:style>
+  <!-- Character Styles -->
+  <s:style><s:tag>span</s:tag><s:name>Span</s:name></s:style>
+  <s:style><s:tag>b</s:tag><s:name>Bold</s:name></s:style>
+  <s:style><s:tag>strong</s:tag><s:name>Bold</s:name></s:style>
+  <s:style><s:tag>s</s:tag><s:name>Strikethrough</s:name></s:style>
+  <s:style><s:tag>strike</s:tag><s:name>Strikethrough</s:name></s:style>
+  <s:style><s:tag>del</s:tag><s:name>Strikethrough</s:name></s:style>
+  <s:style><s:tag>i</s:tag><s:name>Italic</s:name></s:style>
+  <s:style><s:tag>em</s:tag><s:name>Italic</s:name></s:style>
+  <s:style><s:tag>link</s:tag><s:name>Hyperlink</s:name></s:style>
+  <s:style><s:tag>a</s:tag><s:name>Hyperlink</s:name></s:style>
+  <s:style><s:tag>small</s:tag><s:name>Small Print</s:name></s:style>
+  <s:style><s:tag>sub</s:tag><s:name>Subscript</s:name></s:style>
+  <s:style><s:tag>sup</s:tag><s:name>Superscript</s:name></s:style>
+  <s:style><s:tag>time</s:tag><s:name>Time</s:name></s:style>
+  <s:style><s:tag>tt</s:tag><s:name>Teletype</s:name></s:style>
+  <s:style><s:tag>u</s:tag><s:name>Underline</s:name></s:style>
+</s:styles>
 
 </xsl:stylesheet>
