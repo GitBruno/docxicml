@@ -42,7 +42,7 @@ The following elements are supported:
 * Strikethrough
 * Headings
 * Lists
-* Tables (Partly implemented, headers and footers still to do)
+* Tables
 * Footnotes and endnotes (Yet to be implemented)
 * Images (Yet to be implemented)
 * Superscript and subscript (Yet to be implemented)
