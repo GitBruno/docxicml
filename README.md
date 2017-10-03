@@ -2,9 +2,9 @@
 DOCX to ICML converter 
 ======================
 
-docxicml is designed to convert MS Word (DOCX) documents to Adobe InDesign (ICML). It aims to produce clean files by using semantic information only. 
+docxicml is designed to convert MS Word (DOCX) documents to Adobe InDesign (ICML). It aims to produce clean files using semantic information only. 
 
-Therefore ignoring all non-semantical over-rides like font-info and colours. It will however keep unstyled italics, bolds and page breaks. Unlike [Pandoc](https://pandoc.org/), docxicml believes (and assumes that) styles are applied semantically.
+This converter ignores all non-semantical info like font names and colours. It will however keep track of unstyled italics, bolds and page breaks. Unlike [Pandoc](https://pandoc.org/), docxicml believes (and assumes that) styles are applied semantically and therefore tracks all style references.
 
 This package is standing on the shoulders of [Python-Mammoth](https://github.com/mwilliamson/python-mammoth) it creates dynamic style maps and adds an XSLT stylesheet to transform the HTML to ICML.
 
@@ -63,15 +63,13 @@ Installation
 
 Limitations
 -----------
-As it stands, there is room for improvements. First and foremost we need to finalise implementation of all [elements](#supported-elements) listed above.
-
-In the future it would be good if we could round-trip; Convert IDML back to DOCX, this way we can keep all files updated when there is a change.
+As it stands, there is room for improvements. We need to finalise implementation of all [elements](#supported-elements) listed above, and it would be great if we could round-trip conversion; Convert IDML back to DOCX.
 
 
 Getting Help
 ------------
 
-Found a bug? Please [file an Issue](http://github.com/gitbruno/docxicml/issues) on GitHub.
+Bugs and feature requests are tracked with [GitHub Issue Tracker](http://github.com/gitbruno/docxicml/issues).
 
 [![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
 
