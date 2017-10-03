@@ -45,7 +45,7 @@ The following elements are supported:
 * Tables
 * Footnotes and endnotes (Yet to be implemented)
 * Images (Yet to be implemented)
-* Superscript and subscript (Yet to be implemented)
+* Superscript and subscript
 * Links (Yet to be implemented)
 * Breaks (Line, Column, Page)
 

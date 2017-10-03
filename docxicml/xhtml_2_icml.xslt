@@ -191,12 +191,14 @@ tell processor to process the entire document with this template.
     <xsl:if test="//sub[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='sub']/@name"/></xsl:with-param>
+        <xsl:with-param name="position">Subscript</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
     <xsl:if test="//sup[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='sup']/@name"/></xsl:with-param>
+        <xsl:with-param name="position">Superscript</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
@@ -341,14 +343,16 @@ tell processor to process the entire document with this template.
 <xsl:template name="createCharacterStyle">
   <xsl:param name="styleName" />
   <xsl:param name="fontStyle" />
+  <xsl:param name="position" />
   <CharacterStyle>
     <xsl:attribute name="Self">CharacterStyle/<xsl:value-of select="$styleName"/></xsl:attribute>
     <xsl:attribute name="Name"><xsl:value-of select="$styleName"/></xsl:attribute>
-    <xsl:choose>
-        <xsl:when test="string($fontStyle)">
-            <xsl:attribute name="FontStyle"><xsl:value-of select="$fontStyle"/></xsl:attribute>
-        </xsl:when>
-    </xsl:choose>
+    <xsl:if test="string($fontStyle)">
+      <xsl:attribute name="FontStyle"><xsl:value-of select="$fontStyle"/></xsl:attribute>
+    </xsl:if>
+    <xsl:if test="string($position)">
+      <xsl:attribute name="Position"><xsl:value-of select="$position"/></xsl:attribute>
+    </xsl:if>
     <Properties>
       <BasedOn type="object">$ID/[No character style]</BasedOn>
     </Properties>
@@ -401,10 +405,18 @@ tell processor to process the entire document with this template.
   </CharacterStyleRange>
 </xsl:template>
 
-<!-- superscripted text -->
+<!-- Subscripted text -->
 <xsl:template match="//sub[not(@class)]">
   <CharacterStyleRange>
     <xsl:attribute name="AppliedCharacterStyle">CharacterStyle/<xsl:value-of select="$styleNames[@tag='sub']/@name"/></xsl:attribute>
+    <Content><xsl:apply-templates select="text()"/></Content>
+  </CharacterStyleRange>
+</xsl:template>
+
+<!-- superscripted text -->
+<xsl:template match="//sup[not(@class)]">
+  <CharacterStyleRange>
+    <xsl:attribute name="AppliedCharacterStyle">CharacterStyle/<xsl:value-of select="$styleNames[@tag='sup']/@name"/></xsl:attribute>
     <Content><xsl:apply-templates select="text()"/></Content>
   </CharacterStyleRange>
 </xsl:template>
