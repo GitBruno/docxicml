@@ -580,7 +580,7 @@ tell processor to process the entire document with this template.
   <s:style tag="h4"     name="Header 4"/>
   <s:style tag="h5"     name="Header 5"/>
   <s:style tag="h6"     name="Header 6"/>
-  <s:style tag="p"      name="Header 6"/>
+  <s:style tag="p"      name="Paragraph"/>
   <s:style tag="center" name="Center"/>
   <s:style tag="ul"     name="Unordered List"/>
   <s:style tag="ol"     name="Ordered List"/>
