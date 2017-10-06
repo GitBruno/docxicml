@@ -32,26 +32,29 @@ The newly generated files will be at the same location as source document:
     source.xhtml
     source.icml
 
+
 Supported Elements
 ------------------
+
 The following elements are supported:
 
-* Paragraph Styles
-* Character Styles
-* Bold and italic (Underlines and colours are ignored)
-* Strikethrough
-* Headings
-* Lists
-* Tables
-* Footnotes and endnotes (Yet to be implemented)
-* Images (Yet to be implemented)
-* Superscript and subscript
-* Links (Yet to be implemented)
-* Breaks (Line, Column, Page)
+* Paragraph Styles  
+* Character Styles  
+* Bold and italic  
+* Strikethrough and Underlines  
+* Superscript and Subscript  
+* Headings  
+* Ordered and Unordered Lists  
+* Tables (Including headers and footers)  
+* Footnotes and endnotes (Yet to be implemented)   
+* Line, Column and Page Breaks  
+* Hyperlinks (Yet to be implemented)  
+* Images (Yet to be implemented) 
 
 
 Dependencies
 ------------
+
 docxicml requires [Java 6](https://www.java.com/en/download/) or later. (It uses [SaxonHE](https://sourceforge.net/projects/saxon/files/Saxon-HE/) for [XSLT 2.0](https://www.w3.org/TR/xslt20/) transformations.)
 
 
@@ -63,13 +66,15 @@ Installation
 
 Limitations
 -----------
-As it stands, there is room for improvements. We need to finalise implementation of all [elements](#supported-elements) listed above, and it would be great if we could round-trip conversion; Convert IDML back to DOCX.
+
+As it stands, there is room for improvements. We need to finalise implementation of all [elements](#supported-elements) listed above. It might be a good idea to port this to Javascript so we can run it with easy on a wide variety of systems without installing the Java runtime. Both XSLT processor and Mammoth have Javascrip implementations: [mammoth.js](https://github.com/mwilliamson/mammoth.js), [Saxon-JS](www.saxonica.com/saxon-js). It would be usefull to be able to round-trip the files.
 
 
 Getting Help
 ------------
 
 Bugs and feature requests are tracked with [GitHub Issue Tracker](http://github.com/gitbruno/docxicml/issues).
+
 
 [![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
 

@@ -64,13 +64,13 @@ def create_stylemap(docx_fullPath):
         className = re.sub('[^A-Za-z0-9\-\.]+', '', className)
         style_map += "\nr[style-name='" + rStyleDict[k] + "'] => span.x-" + className
     
+    # Add break types
     style_map += "\nbr[type='line'] => br.line"
     style_map += "\nbr[type='column'] => br.column"
     style_map += "\nbr[type='page'] => br.page"
-    
 
-    # add some standard lines
-    # style_map += "\nu => span.underline" #Mammoth is ignoring underlines by default
+    # Turn underline catching on (Mammoth is ignoring underlines by default)
+    style_map += "\nu => u"
 
     # Remove first new line and convert back to unicode string
     if style_map.startswith('\n'):

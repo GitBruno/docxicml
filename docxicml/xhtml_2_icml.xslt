@@ -211,6 +211,9 @@ tell processor to process the entire document with this template.
     <xsl:if test="//u[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='u']/@name"/></xsl:with-param>
+        <xsl:with-param name="underline">true</xsl:with-param>
+        <xsl:with-param name="underlineOffset">2</xsl:with-param>
+        <xsl:with-param name="underlineWeight">0.75</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
@@ -344,6 +347,9 @@ tell processor to process the entire document with this template.
   <xsl:param name="styleName" />
   <xsl:param name="fontStyle" />
   <xsl:param name="position" />
+  <xsl:param name="underline" />
+  <xsl:param name="underlineOffset" />
+  <xsl:param name="underlineWeight" />
   <CharacterStyle>
     <xsl:attribute name="Self">CharacterStyle/<xsl:value-of select="$styleName"/></xsl:attribute>
     <xsl:attribute name="Name"><xsl:value-of select="$styleName"/></xsl:attribute>
@@ -352,6 +358,15 @@ tell processor to process the entire document with this template.
     </xsl:if>
     <xsl:if test="string($position)">
       <xsl:attribute name="Position"><xsl:value-of select="$position"/></xsl:attribute>
+    </xsl:if>
+    <xsl:if test="string($underline)">
+      <xsl:attribute name="Underline"><xsl:value-of select="$underline"/></xsl:attribute>
+    </xsl:if>
+    <xsl:if test="string($underlineOffset)">
+      <xsl:attribute name="UnderlineOffset"><xsl:value-of select="$underlineOffset"/></xsl:attribute>
+    </xsl:if>
+    <xsl:if test="string($underlineWeight)">
+      <xsl:attribute name="UnderlineWeight"><xsl:value-of select="$underlineWeight"/></xsl:attribute>
     </xsl:if>
     <Properties>
       <BasedOn type="object">$ID/[No character style]</BasedOn>
