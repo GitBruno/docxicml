@@ -45,12 +45,17 @@ def docx_to_html(filePath, style_map):
         
         # START TEXT CLEAN
         # ----------------
+        # remove empy white space at beginning of paragraphs
+        prettyhtml = re.sub(r"(?<=\<p\>)\s+", "", prettyhtml)
         # remove empy white space at end of paragraphs
-        prettyhtml = re.sub("\s+(?=\<\/p\>)", "", prettyhtml)
-        # replace empty paragraphs (with or without class) with line breaks <br />
-        prettyhtml = re.sub("\<p(\s((class)|(id))=[\'\"][A-z0-9\s]+[\'\"]\s*)*\>\s*\<\/p\>", "<br />", prettyhtml)
+        prettyhtml = re.sub(r"\s+(?=\<\/p\>)", "", prettyhtml)
+
+        # replace empty paragraphs (with or without class) with line break <br />
+        prettyhtml = re.sub(r"\<p(\s((class)|(id))=[\'\"][A-z0-9\s]+[\'\"]\s*)*\>\s*\<\/p\>", "<br />", prettyhtml)
+        prettyhtml = re.sub(r"<p\s*/>", "<br />", prettyhtml)
+
         # multiple to single line break
-        prettyhtml = re.sub("(\s*\<br\s*\/?\>){2,}", "<br />", prettyhtml, flags=re.IGNORECASE)
+        prettyhtml = re.sub(r"(\s*\<br\s*\/?\>){2,}", "<br />", prettyhtml, flags=re.IGNORECASE)
         
         # remove double spaces
         prettyhtml = re.sub(" +", " ", prettyhtml)
