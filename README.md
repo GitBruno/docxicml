@@ -67,7 +67,7 @@ Installation
 Limitations
 -----------
 
-As it stands, there is room for improvements. We need to finalise implementation of all [elements](#supported-elements) listed above. It might be a good idea to port this to Javascript so we can run it with easy on a wide variety of systems without installing the Java runtime. Both XSLT processor and Mammoth have Javascrip implementations: [mammoth.js](https://github.com/mwilliamson/mammoth.js), [Saxon-JS](www.saxonica.com/saxon-js). It would be usefull to be able to round-trip the files.
+As it stands, there is room for improvements. We need to finalise implementation of all [elements](#supported-elements) listed above. It might be a good idea to port this to Javascript so we can run it with easy on a wide variety of systems without installing the Java runtime. Both XSLT processor and Mammoth have Javascript implementations: [mammoth.js](https://github.com/mwilliamson/mammoth.js), [Saxon-JS](www.saxonica.com/saxon-js). It would be usefull to be able to round-trip the files.
 
 
 Getting Help
