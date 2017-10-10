@@ -8,6 +8,6 @@ if __name__ == "__main__":
     try:
         filePath = sys.argv[1]
     except IndexError:
-        raise IndexError('docxcavate filename as first argument')
+        raise IndexError('docxicml needs path to source file as first argument')
     
     conversion.convert(filePath, None);
