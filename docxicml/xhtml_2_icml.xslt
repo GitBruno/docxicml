@@ -45,14 +45,26 @@ tell processor to process the entire document with this template.
                                           //h6[@class]/@class       | 
                                           //p[@class]/@class        |
                                           //center[@class]/@class   |
-                                          //ul[@class]/@class       |
-                                          //ol[@class]/@class       |
                                           //pre[@class]/@class      |
                                           //q[@class]/@class        |
                                           //samp[@class]/@class     |
                                           //table[@class]/@class    )">
       <xsl:call-template name="createParagraphStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="."/></xsl:with-param>
+      </xsl:call-template>
+    </xsl:for-each>
+
+    <xsl:for-each select="distinct-values(//ol[@class]/@class)">
+      <xsl:call-template name="createParagraphStyle">
+        <xsl:with-param name="styleName"><xsl:value-of select="."/></xsl:with-param>
+        <xsl:with-param name="bulletsAndNumberingListType">NumberedList</xsl:with-param>
+      </xsl:call-template>
+    </xsl:for-each>
+
+    <xsl:for-each select="distinct-values(//ul[@class]/@class)">
+      <xsl:call-template name="createParagraphStyle">
+        <xsl:with-param name="styleName"><xsl:value-of select="."/></xsl:with-param>
+        <xsl:with-param name="bulletsAndNumberingListType">BulletList</xsl:with-param>
       </xsl:call-template>
     </xsl:for-each>
 
@@ -107,12 +119,14 @@ tell processor to process the entire document with this template.
     <xsl:if test="//ul[not(@class)]">
       <xsl:call-template name="createParagraphStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='ul']/@name"/></xsl:with-param>
+        <xsl:with-param name="bulletsAndNumberingListType">BulletList</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
     <xsl:if test="//ol[not(@class)]">
       <xsl:call-template name="createParagraphStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='ol']/@name"/></xsl:with-param>
+        <xsl:with-param name="bulletsAndNumberingListType">NumberedList</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
@@ -260,9 +274,13 @@ tell processor to process the entire document with this template.
 
 <xsl:template name="createParagraphStyle">
   <xsl:param name="styleName" />
+  <xsl:param name="bulletsAndNumberingListType" />
   <ParagraphStyle>
     <xsl:attribute name="Self">ParagraphStyle/<xsl:value-of select="$styleName"/></xsl:attribute>
     <xsl:attribute name="Name"><xsl:value-of select="$styleName"/></xsl:attribute>
+    <xsl:if test="string($bulletsAndNumberingListType)">
+      <xsl:attribute name="BulletsAndNumberingListType"><xsl:value-of select="$bulletsAndNumberingListType"/></xsl:attribute>
+    </xsl:if>
     <Properties>
       <BasedOn type="object">$ID/[No paragraph style]</BasedOn>
     </Properties>
@@ -474,13 +492,15 @@ be wary of <base tag> Specifies the base URL/target for all relative URLs in a d
 <!-- list items -->
 <xsl:template name="listItem">
   <xsl:param name="styleName" />
-  <xsl:for-each select="node()">
+  <xsl:for-each select=".">
     <xsl:choose>
-      <xsl:when test="self::text() || 'li[not(@class)]' || 'p[not(@class)]'">
+      <xsl:when test="self::li[not(@class)] or self::text() or self::p[not(@class)]">
         <xsl:call-template name="paragraphStyleRange">
             <xsl:with-param name="styleName"><xsl:value-of select="$styleName"/></xsl:with-param> 
         </xsl:call-template>
       </xsl:when>
+      <xsl:when test="self::br">
+        <!-- ignore empty lines in lists -->
       <xsl:otherwise>
         <xsl:apply-templates select="current()" />
       </xsl:otherwise>
@@ -525,7 +545,9 @@ be wary of <base tag> Specifies the base URL/target for all relative URLs in a d
   </ParagraphStyleRange>
 </xsl:template>
 <xsl:template match="//br[not(@class)]">
-  <Br />
+  <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/$ID/[No paragraph style]">
+    <Br />
+  </ParagraphStyleRange>
 </xsl:template>
 
 
