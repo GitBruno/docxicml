@@ -170,35 +170,20 @@ tell processor to process the entire document with this template.
 
     <CharacterStyle Self="CharacterStyle/$ID/[No character style]" Name="$ID/[No character style]" />
 
-    <xsl:if test="//b[not(@class)] | //strong[not(@class)]">
+    <xsl:if test="//b[not(@class)]      | 
+                  //strong[not(@class)] |
+                  //i[not(@class)]      | 
+                  //em[not(@class)]     |
+                  //a[not(@class)]      | 
+                  //link[not(@class)]   |
+                  //s[not(@class)]      | 
+                  //strike[not(@class)] | 
+                  //del[not(@class)]    |
+                  //small[not(@class)]  |
+                  //tt[not(@class)]     ">
+      <xsl:variable name="elementName" select='local-name()' />
       <xsl:call-template name="createCharacterStyle">
-        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='b']/@name"/></xsl:with-param>
-        <xsl:with-param name="fontStyle">Bold</xsl:with-param>
-      </xsl:call-template>
-    </xsl:if>
-
-    <xsl:if test="//s[not(@class)] | //strike[not(@class)] | //del[not(@class)]">
-      <xsl:call-template name="createCharacterStyle">
-        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='s']/@name"/></xsl:with-param>
-      </xsl:call-template>
-    </xsl:if>
-
-    <xsl:if test="//i[not(@class)] | //em[not(@class)]">
-      <xsl:call-template name="createCharacterStyle">
-        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='i']/@name"/></xsl:with-param>
-        <xsl:with-param name="fontStyle">Italic</xsl:with-param>
-      </xsl:call-template>
-    </xsl:if>
-
-    <xsl:if test="//a[not(@class)] | //link[not(@class)]">
-      <xsl:call-template name="createCharacterStyle">
-        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='a']/@name"/></xsl:with-param>
-      </xsl:call-template>
-    </xsl:if>
-
-    <xsl:if test="//small[not(@class)]">
-      <xsl:call-template name="createCharacterStyle">
-        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='small']/@name"/></xsl:with-param>
+        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag=$elementName]/@name"/></xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
@@ -213,12 +198,6 @@ tell processor to process the entire document with this template.
       <xsl:call-template name="createCharacterStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='sup']/@name"/></xsl:with-param>
         <xsl:with-param name="position">Superscript</xsl:with-param>
-      </xsl:call-template>
-    </xsl:if>
-
-    <xsl:if test="//tt[not(@class)]">
-      <xsl:call-template name="createCharacterStyle">
-        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='tt']/@name"/></xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
@@ -275,11 +254,15 @@ tell processor to process the entire document with this template.
 <xsl:template name="createParagraphStyle">
   <xsl:param name="styleName" />
   <xsl:param name="bulletsAndNumberingListType" />
+  <xsl:param name="paragraphBreakType" />
   <ParagraphStyle>
     <xsl:attribute name="Self">ParagraphStyle/<xsl:value-of select="$styleName"/></xsl:attribute>
     <xsl:attribute name="Name"><xsl:value-of select="$styleName"/></xsl:attribute>
     <xsl:if test="string($bulletsAndNumberingListType)">
       <xsl:attribute name="BulletsAndNumberingListType"><xsl:value-of select="$bulletsAndNumberingListType"/></xsl:attribute>
+    </xsl:if>
+    <xsl:if test="string($paragraphBreakType)">
+      <xsl:attribute name="ParagraphBreakType"><xsl:value-of select="$paragraphBreakType"/></xsl:attribute>
     </xsl:if>
     <Properties>
       <BasedOn type="object">$ID/[No paragraph style]</BasedOn>
@@ -354,8 +337,12 @@ tell processor to process the entire document with this template.
 
 <xsl:template name="paragraphStyleRange">
   <xsl:param name="styleName" />
+  <xsl:param name="paragraphBreakType" />
   <ParagraphStyleRange>
-    <xsl:attribute name="AppliedParagraphStyle">ParagraphStyle/<xsl:value-of select="$styleName" /></xsl:attribute> 
+    <xsl:attribute name="AppliedParagraphStyle">ParagraphStyle/<xsl:value-of select="$styleName" /></xsl:attribute>
+    <xsl:if test="string($paragraphBreakType)">
+      <xsl:attribute name="ParagraphBreakType"><xsl:value-of select="$paragraphBreakType" /></xsl:attribute> 
+    </xsl:if>
     <xsl:call-template name="normalizeCharacterStyles" />
     <Br />
   </ParagraphStyleRange>
@@ -371,7 +358,7 @@ tell processor to process the entire document with this template.
 
 <!-- P R O C E S S   C H A R A C T E R    S T Y L E   T E M P L A T E S -->
 
-<!-- Style class (ignore span without class) -->
+<!-- Character Styles with class -->
 <xsl:template match="//span[@class]   | 
                      //b[@class]      | 
                      //strong[@class] | 
@@ -392,75 +379,33 @@ tell processor to process the entire document with this template.
     </xsl:call-template>
 </xsl:template>
 
-<!-- italics -->
-<xsl:template match="//em[not(@class)] | //i[not(@class)]">
-    <xsl:call-template name="characterStyleRange">
-        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='i']/@name"/></xsl:with-param>
-    </xsl:call-template>
-</xsl:template>
-
-<!-- bold -->
-<xsl:template match="//strong[not(@class)] | //b[not(@class)]">
-    <xsl:call-template name="characterStyleRange">
-        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='b']/@name"/></xsl:with-param>
-    </xsl:call-template>
-</xsl:template>
-
-<!-- strikethrough -->
-<xsl:template match="//strike[not(@class)] | //s[not(@class)] | //del[not(@class)]">
+<!-- Character styles without class -->
+<xsl:template match="//span[not(@class)]   |
+                     //u[not(@class)]      |
+                     //tt[not(@class)]     |
+                     //time[not(@class)]   |
+                     //sub[not(@class)]    |
+                     //sup[not(@class)]    |
+                     //strike[not(@class)] | 
+                     //s[not(@class)]      | 
+                     //del[not(@class)]    |
+                     //strong[not(@class)] | 
+                     //b[not(@class)]      |
+                     //em[not(@class)]     | 
+                     //i[not(@class)]      |
+                     //a[not(@class)]      | 
+                     //link[not(@class)]   ">
+  <xsl:variable name="elementName" select='local-name()' />
   <xsl:call-template name="characterStyleRange">
-    <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='strike']/@name"/></xsl:with-param>
+    <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag=$elementName]/@name"/></xsl:with-param>
   </xsl:call-template>
 </xsl:template>
-
-<!-- Subscripted text -->
-<xsl:template match="//sub[not(@class)]">
-  <xsl:call-template name="characterStyleRange">
-    <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='sub']/@name"/></xsl:with-param>
-  </xsl:call-template>
-</xsl:template>
-
-<!-- superscripted text -->
-<xsl:template match="//sup[not(@class)]">
-  <xsl:call-template name="characterStyleRange">
-    <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='sup']/@name"/></xsl:with-param>
-  </xsl:call-template>
-</xsl:template>
-
-<!-- time -->
-<xsl:template match="//time[not(@class)]">
-  <xsl:call-template name="characterStyleRange">
-    <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='time']/@name"/></xsl:with-param>
-  </xsl:call-template>
-</xsl:template>
-
-<!-- teletype -->
-<xsl:template match="//tt[not(@class)]">
-  <xsl:call-template name="characterStyleRange">
-    <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='tt']/@name"/></xsl:with-param>
-  </xsl:call-template>
-</xsl:template>
-
-<!-- underline -->
-<xsl:template match="//u[not(@class)]">
-  <xsl:call-template name="characterStyleRange">
-    <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='u']/@name"/></xsl:with-param>
-  </xsl:call-template>
-</xsl:template>
-
-<!-- links -->
-<xsl:template match="//a[not(@class)] | //link[not(@class)]">
-  <xsl:call-template name="characterStyleRange">
-    <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='a']/@name"/></xsl:with-param>
-</xsl:call-template>
 
 <!-- to implement actual links rather then style them
 be wary of <base tag> Specifies the base URL/target for all relative URLs in a document
 <HyperlinkTextSource Self="{@href}" Name="{@href}" Hidden="false" AppliedCharacterStyle="CharacterStyle/Hyperlink">
   <Content><xsl:apply-templates select="text()"/></Content>
 </HyperlinkTextSource> -->
-
-</xsl:template>
 
 <!-- just added these for completion so if there is any text in these elemenst they will be processed -->
 <xsl:template match="//abbr | //acronym | //address | //article | //aside | //bdi | //bdo | //big | //blockquote | //caption | 
@@ -501,6 +446,7 @@ be wary of <base tag> Specifies the base URL/target for all relative URLs in a d
       </xsl:when>
       <xsl:when test="self::br">
         <!-- ignore empty lines in lists -->
+      </xsl:when>
       <xsl:otherwise>
         <xsl:apply-templates select="current()" />
       </xsl:otherwise>
@@ -520,36 +466,28 @@ be wary of <base tag> Specifies the base URL/target for all relative URLs in a d
   </xsl:call-template>
 </xsl:template> 
 
-<xsl:template match="//ol/li[@class]">
+<xsl:template match="//ol/li[@class] | //ul/li[@class]">
   <xsl:call-template name="listItem">
     <xsl:with-param name="styleName"><xsl:value-of select="@class" /></xsl:with-param> 
   </xsl:call-template>
 </xsl:template>
 
-<xsl:template match="//ul/li[@class]">
-  <xsl:call-template name="listItem">
-    <xsl:with-param name="styleName"><xsl:value-of select="@class" /></xsl:with-param>
-  </xsl:call-template>
-</xsl:template> 
-
-
-<!-- Page and Column Breaks -->
-<xsl:template match="//br[@class='column']">
-  <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/$ID/[No paragraph style]" ParagraphBreakType="NextColumn">
-    <Br />
-  </ParagraphStyleRange>
+<!-- Breaks -->
+<xsl:template match="//br">
+  <xsl:choose>
+    <xsl:when test="contains(@class, column) or contains(@class, page)">
+      <xsl:call-template name="paragraphStyleRange">
+        <xsl:with-param name="styleName">$ID/[No paragraph style]</xsl:with-param>
+        <xsl:with-param name="paragraphBreakType"><xsl:value-of select="@class"/></xsl:with-param> 
+      </xsl:call-template>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:call-template name="paragraphStyleRange">
+        <xsl:with-param name="styleName">$ID/[No paragraph style]</xsl:with-param>
+      </xsl:call-template>
+    </xsl:otherwise>
+  </xsl:choose>
 </xsl:template>
-<xsl:template match="//br[@class='page']">
-  <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/$ID/[No paragraph style]" ParagraphBreakType="NextPage">
-    <Br />
-  </ParagraphStyleRange>
-</xsl:template>
-<xsl:template match="//br[not(@class)]">
-  <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/$ID/[No paragraph style]">
-    <Br />
-  </ParagraphStyleRange>
-</xsl:template>
-
 
 <!-- P R O C E S S   T A B L E   T E M P L A T E S -->
 
