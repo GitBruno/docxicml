@@ -30,10 +30,10 @@ tell processor to process the entire document with this template.
 <xsl:processing-instruction name="aid">style="50" type="snippet" readerVersion="6.0" featureSet="513" product="8.0(370)"</xsl:processing-instruction>
 <xsl:processing-instruction name="aid">SnippetType="InCopyInterchange"</xsl:processing-instruction>
 
-<Document DOMVersion="8.0" Self="docxcavate">
+<Document DOMVersion="8.0" Self="docxicml">
 <!-- START PARAGRAPH STYLE DEFINITION -->
 
-  <RootParagraphStyleGroup Self="docxcavate_paragraph_styles">
+  <RootParagraphStyleGroup Self="docxicml_paragraph_styles">
 
     <ParagraphStyle Self="ParagraphStyle/$ID/[No paragraph style]" Name="$ID/[No paragraph style]" />
 
@@ -166,7 +166,7 @@ tell processor to process the entire document with this template.
 
 <!--START CHARACTER STYLE DEFINITION-->
 
-  <RootCharacterStyleGroup Self="docxcavate_character_styles">
+  <RootCharacterStyleGroup Self="docxicml_character_styles">
 
     <CharacterStyle Self="CharacterStyle/$ID/[No character style]" Name="$ID/[No character style]" />
 
@@ -233,14 +233,18 @@ tell processor to process the entire document with this template.
 
 <!-- END CHARACTER STYLE DEFINITION -->
 
-  <RootTableStyleGroup Self="docxcavate_table_styles">
+  <RootObjectStyleGroup Self="docxicml_object_styles">
+    <ObjectStyle Self="ObjectStyle/$ID/[None]" Name="$ID/[None]" />
+  </RootObjectStyleGroup>
+
+  <RootTableStyleGroup Self="docxicml_table_styles">
     <TableStyle Self="TableStyle/Table" Name="Table" />
   </RootTableStyleGroup>
-  <RootCellStyleGroup Self="docxcavate_cell_styles">
+  <RootCellStyleGroup Self="docxicml_cell_styles">
     <CellStyle Self="CellStyle/Cell" AppliedParagraphStyle="ParagraphStyle/$ID/[No paragraph style]" Name="Cell" />
   </RootCellStyleGroup>
 
-  <Story Self="docxcavate_story" TrackChanges="false" StoryTitle="" AppliedTOCStyle="n" AppliedNamedGrid="n" >
+  <Story Self="docxicml_story" TrackChanges="false" StoryTitle="" AppliedTOCStyle="n" AppliedNamedGrid="n" >
     <StoryPreference OpticalMarginAlignment="true" OpticalMarginSize="12" />
     <xsl:apply-templates />
   </Story>
@@ -588,7 +592,55 @@ be wary of <base tag> Specifies the base URL/target for all relative URLs in a d
 </xsl:template> <!-- End table template -->
 
 
-<!-- E N D  O F  P R O C E S S I N G  T E M P L A T E S-->
+<!-- P R O C E S S   I M A G E S  +  T E M P L A T E S -->
+
+<xsl:template name="image_embed_EMF">
+  <xsl:param name="data" />
+  <Rectangle ContentType="GraphicType" AppliedObjectStyle="ObjectStyle/$ID/[None]" >
+    <Properties>
+      <PathGeometry>
+        <!-- Do we really need this? -->
+        <GeometryPathType PathOpen="false">
+          <PathPointArray>
+            <PathPointType Anchor="0 0" LeftDirection="0 0" RightDirection="0 0" />
+            <PathPointType Anchor="250 0" LeftDirection="250 0" RightDirection="250 0" />
+            <PathPointType Anchor="250 125" LeftDirection="250 125" RightDirection="250 125" />
+            <PathPointType Anchor="0 125" LeftDirection="0 125" RightDirection="0 125" />
+          </PathPointArray>
+        </GeometryPathType>
+      </PathGeometry>
+    </Properties>
+
+    <WMF ImageTypeName="$ID/Windows Enhanced Meta Files" AppliedObjectStyle="ObjectStyle/$ID/[None]" >
+      <Properties>
+          <Contents>
+            <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
+            <xsl:copy-of select="replace($data, 'data:image/x-emf;base64,', '')"/>
+            <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
+          </Contents>
+      </Properties>
+      <Link LinkResourceFormat="$ID/Windows Enhanced Meta Files" StoredState="Embedded" />
+    </WMF>
+
+  </Rectangle>
+</xsl:template>
+
+<xsl:template match="//img">
+  <xsl:variable name="source" select='@src' />
+  <xsl:choose>
+    <xsl:when test="starts-with($source,'data:image/x-emf;base64,')">
+      <xsl:call-template name="image_embed_EMF">
+        <xsl:with-param name="data" select="$source" />
+      </xsl:call-template>
+    </xsl:when>
+    <xsl:otherwise>
+      <!-- Image type not supported -->
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
+
+<!-- E N D  O F  P R O C E S S I N G  T E M P L A T E S -->
 
 <xsl:template match="body">
   <xsl:apply-templates select="*"/>

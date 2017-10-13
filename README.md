@@ -49,7 +49,7 @@ The following elements are supported:
 * Footnotes and endnotes (Yet to be implemented)   
 * Line, Column and Page Breaks  
 * Hyperlinks (Yet to be implemented)  
-* Images (Yet to be implemented) 
+* Images (Only embedded EMF) 
 
 
 Dependencies
