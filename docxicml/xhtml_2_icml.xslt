@@ -170,20 +170,75 @@ tell processor to process the entire document with this template.
 
     <CharacterStyle Self="CharacterStyle/$ID/[No character style]" Name="$ID/[No character style]" />
 
-    <xsl:if test="//b[not(@class)]      | 
-                  //strong[not(@class)] |
-                  //i[not(@class)]      | 
-                  //em[not(@class)]     |
-                  //a[not(@class)]      | 
-                  //link[not(@class)]   |
-                  //s[not(@class)]      | 
-                  //strike[not(@class)] | 
-                  //del[not(@class)]    |
-                  //small[not(@class)]  |
-                  //tt[not(@class)]     ">
-      <xsl:variable name="elementName" select='local-name()' />
+    <xsl:if test="//b[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
-        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag=$elementName]/@name"/></xsl:with-param>
+        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='b']/@name"/></xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:if test="//strong[not(@class)]">
+      <xsl:call-template name="createCharacterStyle">
+        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='strong']/@name"/></xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:if test="//i[not(@class)]">
+      <xsl:call-template name="createCharacterStyle">
+        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='i']/@name"/></xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:if test="//em[not(@class)]">
+      <xsl:call-template name="createCharacterStyle">
+        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='em']/@name"/></xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:if test="//a[not(@class)]">
+      <xsl:call-template name="createCharacterStyle">
+        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='a']/@name"/></xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+    
+    <xsl:if test="//link[not(@class)]">
+      <xsl:call-template name="createCharacterStyle">
+        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='link']/@name"/></xsl:with-param>
+        <xsl:with-param name="position">Subscript</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:if test="//s[not(@class)]">
+      <xsl:call-template name="createCharacterStyle">
+        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='s']/@name"/></xsl:with-param>
+        <xsl:with-param name="position">Subscript</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:if test="//strike[not(@class)]">
+      <xsl:call-template name="createCharacterStyle">
+        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='strike']/@name"/></xsl:with-param>
+        <xsl:with-param name="position">Subscript</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:if test="//del[not(@class)]">
+      <xsl:call-template name="createCharacterStyle">
+        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='del']/@name"/></xsl:with-param>
+        <xsl:with-param name="position">Subscript</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:if test="//small[not(@class)]">
+      <xsl:call-template name="createCharacterStyle">
+        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='small']/@name"/></xsl:with-param>
+        <xsl:with-param name="position">Subscript</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+
+    <xsl:if test="//tt[not(@class)]">
+      <xsl:call-template name="createCharacterStyle">
+        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='tt']/@name"/></xsl:with-param>
+        <xsl:with-param name="position">Subscript</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
