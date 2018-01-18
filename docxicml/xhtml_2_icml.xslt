@@ -173,24 +173,32 @@ tell processor to process the entire document with this template.
     <xsl:if test="//b[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='b']/@name"/></xsl:with-param>
+        <!-- Most likely fine! -->
+        <xsl:with-param name="fontStyle">Bold</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
     <xsl:if test="//strong[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='strong']/@name"/></xsl:with-param>
+        <!-- Most likely fine! -->
+        <xsl:with-param name="fontStyle">Bold</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
     <xsl:if test="//i[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='i']/@name"/></xsl:with-param>
+        <!-- Most likely fine! -->
+        <xsl:with-param name="fontStyle">Italic</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
     <xsl:if test="//em[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='em']/@name"/></xsl:with-param>
+        <!-- Most likely fine! -->
+        <xsl:with-param name="fontStyle">Italic</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
@@ -203,42 +211,39 @@ tell processor to process the entire document with this template.
     <xsl:if test="//link[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='link']/@name"/></xsl:with-param>
-        <xsl:with-param name="position">Subscript</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
     <xsl:if test="//s[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='s']/@name"/></xsl:with-param>
-        <xsl:with-param name="position">Subscript</xsl:with-param>
+        <xsl:with-param name="strikeThrough">true</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
     <xsl:if test="//strike[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='strike']/@name"/></xsl:with-param>
-        <xsl:with-param name="position">Subscript</xsl:with-param>
+        <xsl:with-param name="strikeThrough">true</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
     <xsl:if test="//del[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='del']/@name"/></xsl:with-param>
-        <xsl:with-param name="position">Subscript</xsl:with-param>
+        <xsl:with-param name="strikeThrough">true</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
     <xsl:if test="//small[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='small']/@name"/></xsl:with-param>
-        <xsl:with-param name="position">Subscript</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
     <xsl:if test="//tt[not(@class)]">
       <xsl:call-template name="createCharacterStyle">
         <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag='tt']/@name"/></xsl:with-param>
-        <xsl:with-param name="position">Subscript</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
 
@@ -336,6 +341,7 @@ tell processor to process the entire document with this template.
   <xsl:param name="underline" />
   <xsl:param name="underlineOffset" />
   <xsl:param name="underlineWeight" />
+  <xsl:param name="strikeThrough" />
   <CharacterStyle>
     <xsl:attribute name="Self">CharacterStyle/<xsl:value-of select="$styleName"/></xsl:attribute>
     <xsl:attribute name="Name"><xsl:value-of select="$styleName"/></xsl:attribute>
@@ -353,6 +359,9 @@ tell processor to process the entire document with this template.
     </xsl:if>
     <xsl:if test="string($underlineWeight)">
       <xsl:attribute name="UnderlineWeight"><xsl:value-of select="$underlineWeight"/></xsl:attribute>
+    </xsl:if>
+    <xsl:if test="string($strikeThrough)">
+      <xsl:attribute name="StrikeThru"><xsl:value-of select="$strikeThrough"/></xsl:attribute>
     </xsl:if>
     <Properties>
       <BasedOn type="object">$ID/[No character style]</BasedOn>

@@ -94,7 +94,7 @@ def html_to_icml(filePath):
     pathInfo = _splitFullPath(filePath)
     icmlPathStr = os.path.join(pathInfo["baseDir"], pathInfo["fileName"] + ".icml")
     # Call a system process
-    output = subprocess.check_output(["java", "-cp", os.path.join(pathInfo["scriptPath"], "saxon9he.jar"), "net.sf.saxon.Transform", "-t", "-s:"+os.path.join(pathInfo["baseDir"], pathInfo["fileName"] + ".html"), "-xsl:"+os.path.join(pathInfo["scriptPath"], "xhtml_2_icml.xslt"), "-o:"+os.path.join(pathInfo["baseDir"], pathInfo["fileName"] + ".icml")], stderr=subprocess.STDOUT)
+    output = subprocess.call(["java", "-cp", os.path.join(pathInfo["scriptPath"], "saxon9he.jar"), "net.sf.saxon.Transform", "-t", "-s:"+os.path.join(pathInfo["baseDir"], pathInfo["fileName"] + ".html"), "-xsl:"+os.path.join(pathInfo["scriptPath"], "xhtml_2_icml.xslt"), "-o:"+os.path.join(pathInfo["baseDir"], pathInfo["fileName"] + ".icml")], stderr=subprocess.STDOUT)
     print output or "INFO: docxcavate finished conversion from HTML to ICML"
     return icmlPathStr
 
