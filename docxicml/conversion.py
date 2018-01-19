@@ -9,9 +9,10 @@ and of course my own XSLT stylesheet
 
 import os, io, re, ntpath, subprocess
 
-import mammoth
+import mammoth, base64
 from html2textile import *
 from lxml import html, etree
+from PIL import Image
 
 import stylemapper
 
@@ -34,10 +35,29 @@ def _parse_from_unicode(unicode_str):
     s = unicode_str.encode('utf-8')
     return etree.fromstring(s, parser=utf8_parser)
 
+# Custom image handler for Mammoth
+# --------------------------------
+def add_dimensions(image):
+
+    with image.open() as image_source:
+        image_bytes = image_source.read()
+        encoded_src = base64.b64encode(image_bytes).decode("ascii")
+        img_size = Image.open(io.BytesIO(image_bytes)).size
+
+    img = {
+        "src": "data:{0};base64,{1}".format(image.content_type, encoded_src)
+    }
+
+    if img_size:
+        img["width"]  = str(img_size[0]);
+        img["height"] = str(img_size[1]);
+
+    return img
+
 def docx_to_html(filePath, style_map):
     pathInfo = _splitFullPath(filePath)
     with open(filePath, "rb") as docx_file:
-        result = mammoth.convert_to_html(docx_file, style_map=style_map, ignore_empty_paragraphs=False)
+        result = mammoth.convert_to_html(docx_file, style_map=style_map, ignore_empty_paragraphs=False, convert_image=mammoth.images.img_element(add_dimensions))
         messages = result.messages # Any messages, such as warnings during conversion
         html = "<body>" + result.value + "</body>" # XML needs a root tag
         
