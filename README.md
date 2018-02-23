@@ -4,9 +4,9 @@ DOCX to ICML converter
 
 docxicml is designed to convert MS Word (DOCX) documents to Adobe InDesign (ICML). It aims to produce clean files using semantic information only. 
 
-This converter ignores all non-semantical info like font names and colours. It will however keep track of unstyled italics, bolds and page breaks. Unlike [Pandoc](https://pandoc.org/), docxicml believes (and assumes that) styles are applied semantically and therefore tracks all style references.
+This converter ignores all non-semantical info like font names and colours. It will however keep track of unstyled italics, bolds and page breaks. Unlike [Pandoc](https://pandoc.org/), docxicml assumes styles are applied semantically and therefore tracks all style references.
 
-This package is standing on the shoulders of [Python-Mammoth](https://github.com/mwilliamson/python-mammoth) it creates dynamic style maps and adds an XSLT stylesheet to transform the HTML to ICML.
+This package is standing on the shoulders of [Python-Mammoth](https://github.com/mwilliamson/python-mammoth) it generates a dynamic style map and transform the HTML to ICML using a XSLT stylesheet.
 
 Contents
 --------

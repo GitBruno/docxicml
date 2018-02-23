@@ -289,6 +289,29 @@ tell processor to process the entire document with this template.
         <xsl:with-param name="styleName"><xsl:value-of select="." /></xsl:with-param>
       </xsl:call-template>
     </xsl:for-each>
+
+    <!-- Create all needed styles -->
+    <xsl:for-each select="//span   |
+                          //b      |
+                          //strong |
+                          //s      |
+                          //strike |
+                          //del    |
+                          //i      |
+                          //em     |
+                          //link   |
+                          //a      |
+                          //small  |
+                          //sub    |
+                          //time   |
+                          //tt     |
+                          //u      ">
+      <xsl:variable name="elementName" select='local-name()' />
+      <xsl:call-template name="createCharacterStyles">
+        <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag=$elementName]/@name" /></xsl:with-param>
+      </xsl:call-template>
+    </xsl:for-each>
+
   </RootCharacterStyleGroup>
 
 <!-- END CHARACTER STYLE DEFINITION -->
@@ -369,6 +392,35 @@ tell processor to process the entire document with this template.
   </CharacterStyle>
 </xsl:template>
 
+<xsl:template name="createCharacterStyles">
+  <xsl:param name="styleName" />
+  <xsl:for-each select="node()">
+    <xsl:variable name="elementName" select='local-name()' />
+    <xsl:choose>
+      <xsl:when test="self::text()">
+        <xsl:call-template name="createCharacterStyle">
+          <xsl:with-param name="styleName" select="$styleName"></xsl:with-param>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>      
+        <xsl:choose>
+          <xsl:when test="./@class">
+            <xsl:call-template name="createCharacterStyles">
+              <xsl:with-param name="styleName" select="concat($styleName, concat('_', ./@class))"></xsl:with-param>
+            </xsl:call-template>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:call-template name="createCharacterStyles">
+              <xsl:with-param name="styleName" select="concat($styleName, concat('_', $styleNames[@tag=$elementName]/@name))"></xsl:with-param>
+            </xsl:call-template>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:for-each>
+</xsl:template>
+
+
 <xsl:template name="define_table_columns">
   <xsl:param name="index">0</xsl:param>
   <xsl:param name="columnCount">1</xsl:param>
@@ -385,6 +437,7 @@ tell processor to process the entire document with this template.
   </xsl:if>
 </xsl:template>
 
+
 <xsl:template name="characterStyleRange">
   <!-- We need to wrap each stylerange in node, and process any subnodes -->
   <xsl:param name="styleName" />
@@ -398,6 +451,35 @@ tell processor to process the entire document with this template.
       </xsl:when>
       <xsl:otherwise>
         <xsl:apply-templates select="current()" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:for-each>
+</xsl:template>
+
+<xsl:template name="characterStyleRanges">
+  <xsl:param name="styleName" />
+  <xsl:for-each select="node()">
+    <xsl:variable name="elementName" select='./local-name()' />
+    <xsl:choose>
+      <xsl:when test="self::text()">
+        <CharacterStyleRange>
+        <xsl:attribute name="AppliedCharacterStyle">CharacterStyle/<xsl:value-of select="$styleName" /></xsl:attribute> 
+          <Content><xsl:value-of select="current()"/></Content>
+        </CharacterStyleRange>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:choose>
+          <xsl:when test="./@class">
+            <xsl:call-template name="characterStyleRanges">
+              <xsl:with-param name="styleName" select="concat($styleName, concat('_', ./@class))"></xsl:with-param>
+            </xsl:call-template>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:call-template name="characterStyleRanges">
+              <xsl:with-param name="styleName" select="concat($styleName, concat('_', $styleNames[@tag=$elementName]/@name))"></xsl:with-param>
+            </xsl:call-template>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:for-each>
@@ -442,7 +524,7 @@ tell processor to process the entire document with this template.
                      //time[@class]   |
                      //tt[@class]     |
                      //u[@class]     ">
-    <xsl:call-template name="characterStyleRange">
+    <xsl:call-template name="characterStyleRanges">
         <xsl:with-param name="styleName"><xsl:value-of select="@class"/></xsl:with-param>
     </xsl:call-template>
 </xsl:template>
@@ -464,7 +546,7 @@ tell processor to process the entire document with this template.
                      //a[not(@class)]      | 
                      //link[not(@class)]   ">
   <xsl:variable name="elementName" select='local-name()' />
-  <xsl:call-template name="characterStyleRange">
+  <xsl:call-template name="characterStyleRanges">
     <xsl:with-param name="styleName"><xsl:value-of select="$styleNames[@tag=$elementName]/@name"/></xsl:with-param>
   </xsl:call-template>
 </xsl:template>
