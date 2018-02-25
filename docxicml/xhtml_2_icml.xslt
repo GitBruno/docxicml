@@ -244,6 +244,7 @@ tell processor to process the entire document with this template.
 
 <xsl:template name="createCharacterStyle">
   <xsl:param name="styleName" />
+  <xsl:param name="basedOn" />
   <xsl:param name="fontStyle" />
   <xsl:param name="position" />
   <xsl:param name="underline" />
@@ -271,32 +272,54 @@ tell processor to process the entire document with this template.
     <xsl:if test="string($strikeThrough)">
       <xsl:attribute name="StrikeThru"><xsl:value-of select="$strikeThrough"/></xsl:attribute>
     </xsl:if>
-    <Properties>
-      <BasedOn type="object">$ID/[No character style]</BasedOn>
-    </Properties>
+    <xsl:choose>
+      <xsl:when test="string($basedOn)">
+        <Properties>
+          <BasedOn type="object">CharacterStyle/<xsl:value-of select="$basedOn"/></BasedOn>
+        </Properties>
+      </xsl:when>
+      <xsl:otherwise>
+         <Properties>
+          <BasedOn type="object">$ID/[No character style]</BasedOn>
+        </Properties>
+      </xsl:otherwise>
+    </xsl:choose>
   </CharacterStyle>
 </xsl:template>
 
 <xsl:template name="createCharacterStyles">
   <xsl:param name="styleName" />
+  <xsl:param name="basedOn" />
   <xsl:for-each select="node()">
     <xsl:variable name="elementName" select='local-name()' />
     <xsl:choose>
       <xsl:when test="self::text()">
-        <xsl:call-template name="createCharacterStyle">
-          <xsl:with-param name="styleName" select="$styleName"></xsl:with-param>
-        </xsl:call-template>
+        <xsl:choose>
+          <xsl:when test="string($basedOn)">
+            <xsl:call-template name="createCharacterStyle">
+              <xsl:with-param name="styleName" select="$styleName"></xsl:with-param>
+              <xsl:with-param name="basedOn" select="$basedOn"></xsl:with-param>
+            </xsl:call-template>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:call-template name="createCharacterStyle">
+              <xsl:with-param name="styleName" select="$styleName"></xsl:with-param>
+            </xsl:call-template>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:when>
-      <xsl:otherwise>      
+      <xsl:otherwise>
         <xsl:choose>
           <xsl:when test="./@class">
             <xsl:call-template name="createCharacterStyles">
               <xsl:with-param name="styleName" select="concat($styleName, concat('_', ./@class))"></xsl:with-param>
+              <xsl:with-param name="basedOn" select="$styleName"></xsl:with-param>
             </xsl:call-template>
           </xsl:when>
           <xsl:otherwise>
             <xsl:call-template name="createCharacterStyles">
               <xsl:with-param name="styleName" select="concat($styleName, concat('_', $styleNames[@tag=$elementName]/@name))"></xsl:with-param>
+              <xsl:with-param name="basedOn" select="$styleName"></xsl:with-param>
             </xsl:call-template>
           </xsl:otherwise>
         </xsl:choose>
@@ -304,7 +327,6 @@ tell processor to process the entire document with this template.
     </xsl:choose>
   </xsl:for-each>
 </xsl:template>
-
 
 <xsl:template name="define_table_columns">
   <xsl:param name="index">0</xsl:param>
