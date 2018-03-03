@@ -51,17 +51,17 @@ def create_stylemap(docx_fullPath):
     # Generate the style map that mammoth can use
     # Any custom styles go to a span element with class name -> style name
     for k in pStyleDict:
-        # replace spaces in the name with period
-        className = re.sub(' ', '.', pStyleDict[k])
+        # replace spaces in the name with underscore
+        className = re.sub(' ', '_', pStyleDict[k])
         # remove any other special chars
-        className = re.sub('[^A-Za-z0-9\-\.]+', '', className)
+        className = re.sub('[^A-Za-z0-9\-_]+', '', className)
         style_map += "\np[style-name='" + pStyleDict[k] + "'] => p.x-" + className + ":fresh"
 
     for k in rStyleDict:
-        # replace spaces in the name with period
-        className = re.sub(' ', '.', rStyleDict[k])
+        # replace spaces in the name with underscore
+        className = re.sub(' ', '_', rStyleDict[k])
         # remove any other special chars
-        className = re.sub('[^A-Za-z0-9\-\.]+', '', className)
+        className = re.sub('[^A-Za-z0-9\-_]+', '', className)
         style_map += "\nr[style-name='" + rStyleDict[k] + "'] => span.x-" + className
     
     # Add break types
